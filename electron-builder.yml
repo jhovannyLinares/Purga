@@ -1,0 +1,44 @@
+appId: com.jhovanny.purga
+productName: Purga
+copyright: © 2026 Jhovanny Linares
+directories:
+  buildResources: build
+  output: dist
+files:
+  - out/**
+  - package.json
+  # los logos (pantalla de carga, bandeja) y el script de la Papelera
+  - resources/**
+# lo que se lee desde fuera de Node no puede quedar dentro del asar: PowerShell abre recycle.ps1 y Windows carga
+# los binarios nativos de sharp (libvips) y de koffi
+asarUnpack:
+  - resources/**
+  - "**/*.node"
+  - node_modules/@img/**
+  - node_modules/sharp/**
+  - node_modules/koffi/**
+npmRebuild: false
+win:
+  icon: build/icon.ico
+  target:
+    - target: nsis
+      arch: [x64]
+nsis:
+  # instalación por usuario, sin permisos de administrador
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: Purga
+  uninstallDisplayName: Purga
+# endurecimiento del ejecutable: que no sirva de Node para otro programa ni cargue una app fuera del asar firmado
+electronFuses:
+  runAsNode: false
+  enableNodeOptionsEnvironmentVariable: false
+  enableNodeCliInspectArguments: false
+  enableEmbeddedAsarIntegrityValidation: true
+  onlyLoadAppFromAsar: true
+  # la interfaz se carga con loadFile (file://): sin este privilegio la ventana principal no llega a mostrarse
+  grantFileProtocolExtraPrivileges: true
+  enableCookieEncryption: true

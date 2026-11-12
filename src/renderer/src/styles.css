@@ -1,0 +1,104 @@
+/* Lo propio de Purga sobre familia.css (que no se edita aquí). Sin colores literales: solo tokens. */
+img.logo, img.empty-logo { display: block; object-fit: contain; }
+.settings { padding: 0 16px 16px; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; }
+.settings-row { min-height: 32px; }
+.settings-name { flex: 0 0 150px; }
+.nav-hint { padding: 0 14px; }
+.nav-item > .ellipsis { min-width: 0; }
+.about-table .nowrap { white-space: nowrap; }
+
+/* Vistas de Purga: mismas clases y medidas que la maqueta aprobada (docs/maqueta/plantilla.html). */
+.cols-explore { --cols: 28px minmax(0, 2.2fr) minmax(0, 1fr) minmax(96px, 1.1fr) 76px minmax(0, 1.3fr); }
+.cols-proposals { --cols: minmax(0, 2fr) minmax(0, 1.2fr) 80px 250px; }
+.cols-scheduled { --cols: minmax(0, 3fr) 58px minmax(0, 1.2fr) 0.7fr 110px; }
+.cols-expiry { --cols: minmax(0, 2.4fr) 1fr 1.2fr 1fr; }
+.cols-folders { --cols: minmax(0, 2fr) minmax(76px, 1fr) minmax(104px, 1fr) auto; }
+.cols-dup { --cols: 110px minmax(0, 3fr) auto; }
+.block { margin: 0 16px 14px; padding: 12px 14px; border: 1px solid var(--soft-line); border-radius: 4px; background: var(--panel); display: flex; flex-direction: column; gap: 10px; }
+.block h4 { margin: 0; color: var(--text-strong); font-size: var(--fs-base); font-weight: 600; }
+.two-blocks { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0; }
+.selbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0 16px 10px; padding: 8px 10px; border-radius: 4px; background: var(--accent-soft); border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent); }
+.selbar b { color: var(--text-strong); margin-right: 6px; }
+.crumbs { color: var(--muted); font-size: var(--fs-sm); }
+.crumbs b { color: var(--text-strong); }
+.cols-dates { --cols: 28px 1.1fr 0.7fr minmax(0, 2fr) 1fr; }
+.photo-group { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 10px; }
+.photo { border: 1px solid var(--soft-line); border-radius: 4px; background: var(--bg); overflow: hidden; display: flex; flex-direction: column; cursor: pointer; }
+.photo.best { border-color: var(--ok); box-shadow: 0 0 0 1px var(--ok); }
+.photo .thumb { aspect-ratio: 4 / 3; background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 45%, var(--bg)), color-mix(in srgb, var(--link) 30%, var(--panel)) 60%, color-mix(in srgb, var(--warn) 25%, var(--bg))); position: relative; }
+.photo .thumb.soft { filter: blur(1.2px) saturate(0.8); }
+.photo .thumb span { position: absolute; left: 6px; bottom: 6px; padding: 1px 6px; border-radius: 3px; background: var(--backdrop); color: var(--text-strong); font-size: var(--fs-xs); }
+.photo .meta { padding: 8px 10px; display: flex; flex-direction: column; gap: 3px; font-size: var(--fs-sm); }
+.photo .meta b { color: var(--text-strong); font-size: var(--fs-sm); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.preview { border: 1px solid var(--soft-line); border-radius: 4px; background: var(--bg); min-height: 260px; display: flex; flex-direction: column; overflow: hidden; }
+.preview.small { min-height: 150px; }
+.preview .thumb { flex: 1; min-height: 150px; background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 45%, var(--bg)), color-mix(in srgb, var(--link) 30%, var(--panel)) 60%, color-mix(in srgb, var(--warn) 25%, var(--bg))); }
+.preview .page { flex: 1; margin: 14px auto; width: 62%; padding: 14px; background: var(--field); border: 1px solid var(--soft-line); display: flex; flex-direction: column; gap: 6px; }
+.preview .page i { display: block; height: 7px; border-radius: 3px; background: color-mix(in srgb, var(--text-strong) 14%, transparent); }
+.preview pre { margin: 0; padding: 12px; font: var(--fs-xs)/1.5 var(--font-mono); color: var(--text); white-space: pre-wrap; }
+.preview .none { flex: 1; display: flex; flex-direction: column; gap: 8px; align-items: center; justify-content: center; color: var(--muted); padding: 16px; text-align: center; }
+.preview .cap { padding: 6px 10px; border-top: 1px solid var(--soft-line); font-size: var(--fs-xs); color: var(--muted); }
+.review-list { display: flex; flex-direction: column; border: 1px solid var(--soft-line); border-radius: 4px; max-height: 170px; overflow: auto; }
+.review-list .row { padding: 6px 10px; border-bottom: 1px solid color-mix(in srgb, var(--text-strong) 5%, transparent); }
+.review-list .row.out { opacity: 0.5; text-decoration: line-through; }
+.tabs { display: flex; gap: 2px; margin: 0 16px 10px; border-bottom: 1px solid var(--line); }
+.tabs button { height: 32px; padding: 0 14px; border: 0; border-bottom: 2px solid transparent; background: transparent; color: var(--text); cursor: pointer; }
+.tabs button.on { border-bottom-color: var(--accent); color: var(--text-strong); font-weight: 600; }
+.photo .thumb img, .preview img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.photo .thumb.has-image { background: var(--bg); }
+.preview .image { flex: 1; min-height: 150px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.preview .image img { max-height: 520px; }
+.preview.small .image img { max-height: 220px; }
+.cols-batches { --cols: minmax(0, 2.6fr) 1.2fr 0.6fr 110px; }
+.tr.static { cursor: default; }
+.view-scroll { flex: 1 1 auto; overflow-y: auto; display: flex; flex-direction: column; }
+.filters { flex-direction: row; flex-wrap: wrap; align-items: end; gap: 10px; }
+.filters .field { gap: 4px; }
+.filters .text-field { flex: 1 1 200px; }
+.spinner-dot { animation: purga-pulse 1.2s ease-in-out infinite; }
+@keyframes purga-pulse { 50% { opacity: 0.3; } }
+.toast .btn { flex: none; }
+.help-body b { display: block; margin-top: 4px; }
+.log-view { white-space: pre; font-size: var(--fs-xs); max-height: 360px; overflow: auto; }
+.ext-group { width: 110px; flex: none; }
+.dialog .row > .grow > input, .dialog input.grow { width: 100%; }
+.stats { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
+.tr > * { min-width: 0; }
+/* Ventana angosta (el mínimo es 1100×700): las columnas laterales ceden para que la central no recorte sus tablas. */
+@media (max-width: 1200px) {
+  .nav { flex-basis: 200px; }
+  .detail { flex-basis: 300px; }
+}
+.activity { display: flex; flex-direction: column; }
+.th-sort { all: unset; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; max-width: 100%; }
+.th-sort:hover, .th-sort.on { color: var(--text-strong); }
+.th-sort:focus-visible { outline: 1px solid var(--accent); outline-offset: 2px; }
+.th-sort .arrow { font-size: var(--fs-xs); }
+.num > .th-sort { justify-content: flex-end; width: 100%; }
+.activity-bar { display: block; height: 4px; margin-top: 4px; border-radius: 2px; background: var(--soft-line); overflow: hidden; }
+.activity-bar i { display: block; height: 100%; border-radius: 2px; }
+.activity-bar.ok i { background: var(--ok); }
+.activity-bar.warn i { background: var(--warn); }
+.activity-bar.err i { background: var(--err); }
+
+.proposal-acts { justify-content: flex-end; gap: 4px; }
+.name-cell { display: flex; align-items: center; gap: 6px; min-width: 0; }
+.name-cell > .file-line { flex: 1; }
+
+/* Lámina 13: reglas como frase, panel ⓘ y formulario de regla propia */
+.cols-rules { --cols: 28px minmax(0, 1fr) auto; align-items: start; padding-top: 10px; padding-bottom: 10px; }
+.rule-text { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.rule-text b { color: var(--text-strong); font-weight: 600; }
+.rule-text p { margin: 0; line-height: 1.6; }
+.rule-text input[type='number'] { width: 64px; height: 26px; margin: 0 4px; }
+.rule-text .muted { font-size: var(--fs-sm); }
+.rule-side { margin: 0 16px 14px; padding: 12px 14px; border: 1px solid var(--soft-line); border-radius: 4px; background: var(--panel); display: flex; flex-direction: column; gap: 8px; }
+.rule-side dl { margin: 0; display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 6px 10px; }
+.rule-side dt { color: var(--muted); }
+.rule-side dd { margin: 0; }
+.rule-form { display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: 8px 10px; align-items: center; }
+.rule-form > label { color: var(--muted); }
+.rule-form .grow-row { display: flex; gap: 6px; align-items: center; min-width: 0; }
+.rule-form .grow-row > input:not([type='number']), .rule-form .grow-row > select { flex: 1; min-width: 0; }
+.rule-form input[type='number'] { width: 110px; }
+.list-title.sub-title { font-size: var(--fs-base); }

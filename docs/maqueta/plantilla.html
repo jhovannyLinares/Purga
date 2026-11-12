@@ -1,0 +1,1607 @@
+<title>Maqueta de Purga</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap">
+<style>
+/*__APP_CSS__*/
+</style>
+<style>
+/*__MAQUETA_CSS__*/
+/* propio de esta maqueta: columnas de cada tabla del prototipo */
+.cols-explore { --cols: 28px minmax(0, 2.6fr) 1fr 1fr 0.8fr 1.3fr; }
+/* propuesta (lámina 11): ordenar por columna y barra de actividad */
+.th-sort { all: unset; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; max-width: 100%; }
+.th-sort:hover, .th-sort.on { color: var(--text-strong); }
+.th-sort:focus-visible { outline: 1px solid var(--accent); outline-offset: 2px; }
+.th-sort .arrow { font-size: 9px; }
+.num > .th-sort { justify-content: flex-end; width: 100%; }
+.activity-bar { display: block; height: 4px; margin-top: 4px; border-radius: 2px; background: var(--soft-line); overflow: hidden; }
+.activity-bar i { display: block; height: 100%; border-radius: 2px; }
+.activity-bar.ok i { background: var(--ok); }
+.activity-bar.warn i { background: var(--warn); }
+.activity-bar.err i { background: var(--err); }
+.mq-legend-bar { display: inline-block; width: 70px; vertical-align: middle; margin-right: 8px; }
+.cols-proposals { --cols: minmax(0, 2.2fr) 1.6fr 1fr 170px; }
+.cols-scheduled { --cols: minmax(0, 2.4fr) 1.2fr 1fr 0.8fr 110px; }
+.cols-expiry { --cols: minmax(0, 2.4fr) 1fr 1.2fr 1fr; }
+.cols-folders { --cols: minmax(0, 2fr) 1fr 1fr 0.8fr; }
+.cols-dup { --cols: 120px minmax(0, 3fr) 1fr; }
+.block { margin: 0 16px 14px; padding: 12px 14px; border: 1px solid var(--soft-line); border-radius: 4px; background: var(--panel); display: flex; flex-direction: column; gap: 10px; }
+.block h4 { margin: 0; color: var(--text-strong); font-size: 13px; font-weight: 600; }
+.two-blocks { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+.selbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0 16px 10px; padding: 8px 10px; border-radius: 4px; background: var(--accent-soft); border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent); }
+.selbar b { color: var(--text-strong); margin-right: 6px; }
+.crumbs { color: var(--muted); font-size: 12px; }
+.crumbs b { color: var(--text-strong); }
+.cols-dates { --cols: 28px 1.1fr 0.7fr minmax(0, 2fr) 1fr; }
+.photo-group { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 10px; }
+.photo { border: 1px solid var(--soft-line); border-radius: 4px; background: var(--bg); overflow: hidden; display: flex; flex-direction: column; cursor: pointer; }
+.photo.best { border-color: var(--ok); box-shadow: 0 0 0 1px var(--ok); }
+.photo .thumb { aspect-ratio: 4 / 3; background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 45%, var(--bg)), color-mix(in srgb, var(--link) 30%, var(--panel)) 60%, color-mix(in srgb, var(--warn) 25%, var(--bg))); position: relative; }
+.photo .thumb.soft { filter: blur(1.2px) saturate(0.8); }
+.photo .thumb span { position: absolute; left: 6px; bottom: 6px; padding: 1px 6px; border-radius: 3px; background: var(--backdrop); color: var(--text-strong); font-size: 11px; }
+.photo .meta { padding: 8px 10px; display: flex; flex-direction: column; gap: 3px; font-size: 11.5px; }
+.photo .meta b { color: var(--text-strong); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.preview { border: 1px solid var(--soft-line); border-radius: 4px; background: var(--bg); min-height: 260px; display: flex; flex-direction: column; overflow: hidden; }
+.preview.small { min-height: 150px; }
+.preview .thumb { flex: 1; min-height: 150px; background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 45%, var(--bg)), color-mix(in srgb, var(--link) 30%, var(--panel)) 60%, color-mix(in srgb, var(--warn) 25%, var(--bg))); }
+.preview .page { flex: 1; margin: 14px auto; width: 62%; padding: 14px; background: var(--field); border: 1px solid var(--soft-line); display: flex; flex-direction: column; gap: 6px; }
+.preview .page i { display: block; height: 7px; border-radius: 3px; background: color-mix(in srgb, var(--text-strong) 14%, transparent); }
+.preview pre { margin: 0; padding: 12px; font: 11px/1.5 'Cascadia Mono', Consolas, monospace; color: var(--text); white-space: pre-wrap; }
+.preview .none { flex: 1; display: flex; flex-direction: column; gap: 8px; align-items: center; justify-content: center; color: var(--muted); padding: 16px; text-align: center; }
+.preview .cap { padding: 6px 10px; border-top: 1px solid var(--soft-line); font-size: 11px; color: var(--muted); }
+.review-list { display: flex; flex-direction: column; border: 1px solid var(--soft-line); border-radius: 4px; max-height: 170px; overflow: auto; }
+.review-list .row { padding: 6px 10px; border-bottom: 1px solid color-mix(in srgb, var(--text-strong) 5%, transparent); }
+.review-list .row.out { opacity: 0.5; text-decoration: line-through; }
+.tabs { display: flex; gap: 2px; margin: 0 16px 10px; border-bottom: 1px solid var(--line); }
+.tabs button { height: 32px; padding: 0 14px; border: 0; border-bottom: 2px solid transparent; background: transparent; color: var(--text); cursor: pointer; }
+.tabs button.on { border-bottom-color: var(--accent); color: var(--text-strong); font-weight: 600; }
+/* lámina 14 dentro del prototipo: tablas con columnas a elección (propuesta, borde punteado en el ⋮) */
+.col-table .tr { width: 100%; min-width: var(--table-min); }
+.col-th { position: relative; display: flex; align-items: center; min-width: 0; }
+.col-th.num { justify-content: flex-end; }
+.col-td { min-width: 0; overflow: hidden; }
+.col-grip { position: absolute; z-index: 2; top: -6px; bottom: -6px; right: -7px; width: 8px; cursor: col-resize; border-right: 2px solid var(--soft-line); }
+.col-grip:hover, .col-grip.on { border-right-color: var(--accent); }
+.col-tail { display: flex; justify-content: flex-end; align-items: center; gap: 4px; min-width: 0; position: sticky; right: 0; padding-left: 6px; background: var(--bg); }
+.block .col-table .col-tail { background: var(--panel); }
+.block .col-table .tr.th .col-tail { background: var(--bg); }
+.mq-proposed { outline: 1px dashed var(--accent); outline-offset: 1px; }
+.ctx.cols-panel { position: absolute; z-index: 25; min-width: 240px; padding: 6px; display: flex; flex-direction: column; gap: 2px; }
+.cols-panel label { display: flex; gap: 8px; align-items: center; padding: 4px 8px; border-radius: 3px; cursor: pointer; color: var(--text-strong); }
+.cols-panel label:hover { background: var(--accent-soft); }
+.cols-panel small { margin-left: auto; color: var(--muted); font-size: 11px; }
+.cols-title { padding: 4px 8px 6px; color: var(--text-strong); }
+.cols-panel .hint { padding: 0 8px; }
+.ctx.cols-panel .link-btn { width: auto; height: auto; padding: 4px 8px; color: var(--link); }
+/* propuesta (lámina 14): columnas a elección y ancho ajustable */
+.cc-wrap { overflow-x: auto; min-height: 480px; border: 1px solid var(--soft-line); border-radius: 4px; background: var(--panel); }
+.cc-table { display: inline-flex; flex-direction: column; min-width: 100%; font-size: 13px; }
+.cc-head, .cc-row { display: flex; align-items: center; border-bottom: 1px solid var(--soft-line); }
+.cc-head > span, .cc-row > span { flex: none; padding: 8px 10px; box-sizing: border-box; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cc-th { position: relative; color: var(--muted); font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; }
+.cc-th.num, .cc-row .num { text-align: right; }
+.cc-grip { position: absolute; top: 4px; bottom: 4px; right: 0; width: 6px; cursor: col-resize; border-right: 2px solid var(--soft-line); }
+.cc-grip:hover, .cc-grip.on { border-right-color: var(--accent); }
+.cc-colbtn { margin-left: auto; position: relative; overflow: visible !important; text-transform: none; letter-spacing: 0; }
+.cc-menu { position: absolute; right: 0; top: 34px; z-index: 2; min-width: 220px; padding: 6px; border: 1px solid var(--line); border-radius: 4px; background: var(--panel); box-shadow: 0 8px 24px rgb(0 0 0 / 0.25); display: flex; flex-direction: column; gap: 2px; font-size: 13px; font-weight: 400; color: var(--text); }
+.cc-menu label { display: flex; gap: 8px; align-items: center; padding: 4px 6px; border-radius: 3px; cursor: pointer; }
+.cc-menu label:hover { background: var(--accent-soft); }
+.cc-menu small { color: var(--muted); margin-left: auto; }
+.cc-menu[hidden] { display: none; }
+.cc-menu-title { padding: 2px 6px 6px; color: var(--text-strong); font-size: 13px; }
+.cc-menu .hint { padding: 0 6px; font-size: 12px; }
+.cc-hidden { display: none !important; }
+.cc-menu hr { border: 0; border-top: 1px solid var(--soft-line); margin: 4px 0; }
+.cc-menu button { all: unset; cursor: pointer; padding: 4px 6px; color: var(--link); }
+.cc-row b { display: block; color: var(--text-strong); font-weight: 600; overflow: hidden; text-overflow: ellipsis; }
+.cc-row small { display: block; color: var(--muted); font-size: 12px; direction: rtl; text-align: left; }
+.cc-board-pad { height: 300px; }
+/* propuesta (láminas 12 y 13): fila de archivo única, menú ⋮, origen en una línea, reglas */
+.pp-list { display: flex; flex-direction: column; border: 1px solid var(--soft-line); border-radius: 4px; background: var(--panel); }
+.pp-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 10px; padding: 8px 10px; border-bottom: 1px solid var(--soft-line); }
+.pp-row:last-child { border-bottom: 0; }
+.pp-file { display: flex; flex-direction: column; min-width: 0; }
+.pp-file b { color: var(--text-strong); font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* la carpeta se recorta por el INICIO: lo que identifica una ruta está al final */
+.pp-path { color: var(--muted); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; direction: rtl; text-align: left; }
+.pp-acts { display: flex; gap: 6px; align-items: center; opacity: 0; transition: opacity 0.12s; }
+.pp-row:hover .pp-acts, .pp-row:focus-within .pp-acts, .pp-acts.always { opacity: 1; }
+.pp-icon { all: unset; cursor: pointer; width: 26px; height: 26px; display: inline-grid; place-items: center; border-radius: 4px; color: var(--text); }
+.pp-icon:hover, .pp-icon[aria-expanded='true'] { background: var(--accent-soft); color: var(--text-strong); }
+.pp-menu-wrap { position: relative; }
+.pp-menu { position: absolute; right: 0; top: 30px; z-index: 2; min-width: 230px; padding: 4px; border: 1px solid var(--line); border-radius: 4px; background: var(--panel); box-shadow: 0 8px 24px rgb(0 0 0 / 0.25); display: flex; flex-direction: column; }
+.pp-menu button { all: unset; cursor: pointer; padding: 6px 10px; border-radius: 3px; color: var(--text); }
+.pp-menu button:hover { background: var(--accent-soft); color: var(--text-strong); }
+.pp-menu small { display: block; color: var(--muted); font-size: 11px; }
+.pp-menu hr { border: 0; border-top: 1px solid var(--soft-line); margin: 4px 0; }
+.pp-danger { background: color-mix(in srgb, var(--err) 18%, transparent); color: var(--text-strong); border: 1px solid color-mix(in srgb, var(--err) 45%, transparent); }
+.pp-origin { display: grid; grid-template-columns: 70px minmax(0, 1fr); gap: 4px 10px; font-size: 12px; }
+.pp-origin dt { color: var(--muted); }
+.pp-origin dd { margin: 0; min-width: 0; }
+.pp-one { display: flex; gap: 6px; align-items: center; min-width: 0; }
+.pp-one span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pp-one a { color: var(--link); cursor: pointer; white-space: nowrap; }
+.pp-full { margin-top: 4px; padding: 6px 8px; border-radius: 3px; background: var(--bg); font: 11px/1.4 'Cascadia Mono', Consolas, monospace; word-break: break-all; max-height: 90px; overflow: auto; }
+.pp-rule { display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; gap: 10px; align-items: start; padding: 10px; border-bottom: 1px solid var(--soft-line); }
+.pp-rule:last-child { border-bottom: 0; }
+.pp-rule p { margin: 2px 0 0; color: var(--text); font-size: 12px; line-height: 1.5; }
+.pp-rule input[type='number'] { width: 52px; }
+.pp-side { border: 1px solid var(--soft-line); border-radius: 4px; background: var(--panel); padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; font-size: 12px; }
+.pp-side h4 { margin: 0; color: var(--text-strong); font-size: 13px; }
+.pp-side dl { margin: 0; display: grid; grid-template-columns: 110px 1fr; gap: 6px 10px; }
+.pp-side dt { color: var(--muted); }
+.pp-side dd { margin: 0; }
+.pp-form { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 8px 10px; align-items: center; font-size: 12px; }
+.pp-form label { color: var(--muted); }
+.pp-form .grow { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+</style>
+
+<main class="mq-page">
+  <header class="mq-masthead">
+    <span class="mq-logo" style="width:72px;height:72px" role="img" aria-label="Logo de Purga"></span>
+    <div>
+      <h1>Purga</h1>
+      <p>Lo construido en <code>src/renderer</code>, versión 0.1.0: indexa archivos locales, detecta lo que sobra y avisa lo que vence. Diseño de la familia (maqueta-app) con los colores del logo. Datos de ejemplo: ningún archivo ni ruta es real.</p>
+    </div>
+    <dl class="mq-stamp">
+      <dt>Nivel</dt><dd>Construido · v0.1.0</dd>
+      <dt>Fase</dt><dd>P0 a P9 · construido</dd>
+      <dt>Spec</dt><dd>docs/specs/spec.md</dd>
+      <dt>Ventana</dt><dd>1280×800 · mín 1100×700</dd>
+      <dt>Fecha</dt><dd>2026-11-05</dd>
+    </dl>
+  </header>
+
+  <nav class="mq-toc" aria-label="Láminas">
+    <a href="#identidad">1 · Identidad</a><a href="#carga">2 · Carga</a><a href="#flujo">3 · Flujo</a><a href="#prototipo">4 · Prototipo</a>
+    <a href="#estados">5 · Estados</a><a href="#marcas">6 · Marcas</a><a href="#bandeja">7 · Bandeja y avisos</a><a href="#ayuda">8 · Ayuda y Acerca de</a><a href="#explorador">9 · Clic derecho</a><a href="#fotos">10 · Fotos</a><a href="#orden">11 · Orden y actividad</a><a href="#listas">12 · Listas y acciones</a><a href="#reglas">13 · Reglas</a><a href="#columnas">14 · Columnas</a><a href="#excluir">15 · Excluir subcarpetas</a>
+    <div class="mq-theme" role="group" aria-label="Tema">
+      <button type="button" data-theme-choice="system">Sistema</button><button type="button" data-theme-choice="dark">Oscuro</button><button type="button" data-theme-choice="light">Claro</button>
+    </div>
+  </nav>
+
+  <!-- ============ 1 · IDENTIDAD ============ -->
+  <section class="mq-sheet" id="identidad">
+    <div class="mq-sheet-head"><span class="mq-no">LÁMINA 1</span><h2>Identidad: logo, ícono y paleta</h2><span class="mq-seal built">Construido</span><span class="mq-src">resources/logo*.png · src/renderer/src/tokens.css</span></div>
+    <p class="mq-lede">El logo es el del diseñador, sin texto y con fondo transparente. Hay uno por tema: el de noche es el ícono en todas partes y el logo con el tema oscuro; el de día es el logo dentro de la app con el tema claro. Cambia el tema arriba a la derecha para ver el otro.</p>
+    <div class="mq-two">
+      <div class="mq-board">
+        <span class="mq-cap">Tamaños del ícono</span>
+        <div class="mq-sizes">
+          <figure><span class="mq-logo" style="width:128px;height:128px"></span><figcaption>128</figcaption></figure>
+          <figure><span class="mq-logo" style="width:64px;height:64px"></span><figcaption>64</figcaption></figure>
+          <figure><span class="mq-logo" style="width:48px;height:48px"></span><figcaption>48</figcaption></figure>
+          <figure><span class="mq-logo" style="width:32px;height:32px"></span><figcaption>32</figcaption></figure>
+          <figure><span class="mq-logo" style="width:24px;height:24px"></span><figcaption>24</figcaption></figure>
+          <figure><span class="mq-logo" style="width:16px;height:16px"></span><figcaption>16</figcaption></figure>
+        </div>
+        <span class="mq-cap">En la barra de tareas</span>
+        <div class="mq-taskbar" aria-hidden="true"><div class="mq-slot"><span class="mq-ghost"></span></div><div class="mq-slot"><span class="mq-ghost"></span></div><div class="mq-slot on"><span class="mq-logo" style="width:24px;height:24px"></span></div><div class="mq-slot"><span class="mq-ghost"></span></div></div>
+        <dl class="mq-uses">
+          <dt>build/logo-origen.jpg</dt><dd>Lámina del diseñador, fondo oscuro</dd>
+          <dt>build/logo-dia-origen.jpg</dt><dd>Lámina del diseñador, fondo claro</dd>
+          <dt>resources/logo.png</dt><dd>Emblema de noche, 512 px: ícono, carga y tema oscuro</dd>
+          <dt>resources/logo-dia.png</dt><dd>Emblema de día, 512 px: logo con el tema claro</dd>
+          <dt>build/icon.ico</dt><dd>16 a 256 px, lo genera build/icono.mjs</dd>
+        </dl>
+      </div>
+      <div class="mq-board">
+        <span class="mq-cap">Paleta · noche (por defecto)</span>
+        <div class="mq-swatches" id="mq-sw-dark"></div>
+        <span class="mq-cap">Paleta · día</span>
+        <div class="mq-swatches" id="mq-sw-light"></div>
+        <p class="mq-note">--brand y --accent salen del logo; los neutros llevan su sesgo azul; verde, ámbar y rojo son estados y no salen del logo.</p>
+        <span class="mq-cap">Tipografía</span>
+        <div class="mq-type"><span class="big">Purga</span><span>Open Sans · interfaz</span><span class="mq-mono">Cascadia Mono · rutas y datos</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 2 · CARGA ============ -->
+  <section class="mq-sheet" id="carga">
+    <div class="mq-sheet-head"><span class="mq-no">LÁMINA 2</span><h2>Pantalla de carga y arranque</h2><span class="mq-seal built">Construido</span><span class="mq-src">src/main/splash.ts · src/main/index.ts</span></div>
+    <p class="mq-lede">Ventana sin marco a tamaño real, sin JavaScript, con el logo y el fondo del tema activo. Purga no pide administrador: en vez del diario de cambios de NTFS, al abrir reconcilia las carpetas vigiladas y después las vigila mientras está abierta.</p>
+    <div class="mq-board">
+      <div class="mq-splash-wrap">
+        <div class="mq-splash" id="mq-splash"><span class="mq-logo"></span><h4>Purga</h4><p>Revisando tus carpetas…</p><span class="dims">260 × 480</span></div>
+        <div style="display:flex;flex-direction:column;gap:14px;min-width:0">
+          <ol class="mq-timeline" id="mq-boot">
+            <li><span class="mq-n">1</span><div><b>Se abre la pantalla de carga</b><span><code>openSplash()</code>: oculta hasta <code>ready-to-show</code>, sin Node ni preload. Fondo del tema guardado en las preferencias.</span></div></li>
+            <li><span class="mq-n">2</span><div><b>Se abre el índice</b><span><code>openDatabase()</code>: SQLite en modo WAL y migraciones.</span></div></li>
+            <li><span class="mq-n">3</span><div><b>Se pone al día con el disco</b><span><code>reconcileRoots()</code>: recorre las carpetas vigiladas comparando tamaño y fecha, sin abrir archivos; sigue por detrás.</span></div></li>
+            <li><span class="mq-n">4</span><div><b>La ventana principal pinta y avisa</b><span>El renderer pide el resumen y llama a <code>app:ready</code>. Empieza <code>watchRoots()</code> con <code>ReadDirectoryChangesW</code>.</span></div></li>
+            <li><span class="mq-n">5</span><div><b>Se cierra sin parpadeo</b><span><code>closeWhenSeen()</code> deja la carga al menos <code>SPLASH_MIN_MS</code> (400 ms).</span></div></li>
+            <li><span class="mq-n">6</span><div><b>Pasada diaria y avisos</b><span><code>runDailyPass()</code> si la última tiene más de 24 h; <code>deliverOutbox()</code> manda los avisos pendientes; el ícono queda en la bandeja.</span></div></li>
+          </ol>
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button type="button" class="mq-btn primary" id="mq-replay">Ver el arranque</button><span class="mq-note">Recorre los pasos y abre el prototipo en el Resumen.</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 3 · FLUJO ============ -->
+  <section class="mq-sheet" id="flujo">
+    <div class="mq-sheet-head"><span class="mq-no">LÁMINA 3</span><h2>Flujo entre pantallas</h2><span class="mq-seal built">Construido</span><span class="mq-src">App.tsx · vistas · diálogos</span></div>
+    <p class="mq-lede">Cada fila es un recorrido: qué lo dispara, por qué pantallas pasa y cómo termina. «Probar» lo deja listo en el prototipo.</p>
+    <div class="mq-legend"><span class="mq-step screen">Pantalla</span><span class="mq-step">Acción o diálogo</span><span class="mq-step sys">Windows</span><span class="mq-step own">Índice de Purga</span></div>
+    <div class="mq-flows" id="mq-flows"></div>
+  </section>
+
+  <!-- ============ 4 · PROTOTIPO ============ -->
+  <section class="mq-sheet" id="prototipo">
+    <div class="mq-sheet-head"><span class="mq-no">LÁMINA 4</span><h2>Prototipo navegable</h2><span class="mq-seal built">Construido</span><span class="mq-src">1280 × 800 · se desplaza de lado en pantallas angostas</span></div>
+    <p class="mq-lede">La ventana usa la hoja de la familia con los colores de Purga. Los menús, la selección con casillas, las marcas, los diálogos y el detalle funcionan. Ninguna regla borra: «A la Papelera» manda a la Papelera de reciclaje y siempre se puede deshacer. Pasa el mouse por una fila para Abrir y Mostrar en carpeta; ⋮ en Propuestas y clic derecho en una carpeta vigilada traen el resto. El ⋮ del encabezado de cada tabla elige sus columnas, y el borde de cada título se arrastra (lámina 14). <b>Propuesta (lámina 15), con borde punteado:</b> «Subcarpetas excluidas» en Configuración → Editar, y clic derecho sobre un archivo en Explorar → «Excluir carpeta…».</p>
+    <div class="mq-proto-bar">
+      <button type="button" class="mq-btn small" data-scenario="sample">Datos de ejemplo</button>
+      <button type="button" class="mq-btn small" data-scenario="first">Primer uso</button>
+      <button type="button" class="mq-btn small" data-scenario="scanning">Escaneando</button>
+      <span class="mq-tag">Datos de ejemplo: ningún archivo ni ruta es real</span>
+    </div>
+    <div class="mq-window-scroll">
+      <div class="mq-window">
+        <div class="mq-titlebar"><span class="mq-logo"></span>Purga<div class="ctl" aria-hidden="true"><span>—</span><span>▢</span><span>✕</span></div></div>
+        <div class="win" id="app"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 5 · ESTADOS ============ -->
+  <section class="mq-sheet" id="estados">
+    <div class="mq-sheet-head"><span class="mq-no">LÁMINA 5</span><h2>Estados de una fila, del detalle y de la barra inferior</h2><span class="mq-seal built">Construido</span><span class="mq-src">MarkBadge · FileTable · DetailPanel · App (barra de estado)</span></div>
+    <p class="mq-lede">Lo que cambia de aspecto cambia por algo: la marca que puso el usuario, lo que propone una regla, si el archivo cambió después de marcarlo y si su disco está conectado.</p>
+    <div class="mq-states" id="mq-states"></div>
+  </section>
+
+  <!-- ============ 6 · MARCAS ============ -->
+  <section class="mq-sheet" id="marcas">
+    <div class="mq-sheet-head"><span class="mq-no">LÁMINA 6</span><h2>Marcas: qué se borra, cuándo y qué se queda</h2><span class="mq-seal built">Construido</span><span class="mq-src">file_decision · batch</span></div>
+    <p class="mq-lede">La marca vive en el índice de Purga (no en el archivo ni en la carpeta), atada al disco y al identificador del archivo, así sobrevive a renombrar y mover. Una carpeta puede tener su marca y los archivos nuevos la heredan; la marca del archivo gana.</p>
+    <div class="mq-two">
+      <div class="mq-board">
+        <h3>Las seis marcas</h3>
+        <div class="mq-table-scroll"><table class="mq-table"><thead><tr><th>Marca</th><th>Qué hace</th></tr></thead><tbody id="mq-marks"></tbody></table></div>
+      </div>
+      <div class="mq-board">
+        <h3>Para que una marca no borre lo que no debe</h3>
+        <div class="mq-table-scroll"><table class="mq-table"><thead><tr><th>Si…</th><th>Entonces</th></tr></thead><tbody>
+          <tr><td>Se modificó después de marcarlo para eliminar</td><td>La marca se suspende y pasa a «Revisar»</td></tr>
+          <tr><td>Se movió o renombró en el mismo disco</td><td>Conserva la marca</td></tr>
+          <tr><td>Se copió</td><td>La copia no hereda; se avisa «copia de un archivo marcado»</td></tr>
+          <tr><td>Desapareció antes de la fecha</td><td>La marca se cierra como «ya no existe»</td></tr>
+          <tr><td>Su disco está desconectado en la fecha</td><td>Espera a que vuelva y avisa</td></tr>
+          <tr><td>Se deshace el lote</td><td>Vuelven las marcas y sale de la Papelera si sigue ahí</td></tr>
+        </tbody></table></div>
+        <p class="mq-note">«Eliminar el {fecha}» lo decidió el usuario: se ejecuta solo, con aviso el día anterior y «Deshacer». Las reglas solo proponen.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 7 · BANDEJA ============ -->
+  <section class="mq-sheet" id="bandeja">
+    <div class="mq-sheet-head"><span class="mq-no">LÁMINA 7</span><h2>Bandeja del sistema y avisos de Windows</h2><span class="mq-seal built">Construido</span><span class="mq-src">src/main/index.ts (bandeja) · src/main/notifier.ts · src/backend/scheduler.ts</span></div>
+    <p class="mq-lede">Al cerrar la ventana, Purga queda en la bandeja para la pasada diaria y los avisos. «Iniciar con Windows» es opcional (Configuración). La bandeja y los avisos son de Windows: aquí se dibujan con los colores de la página.</p>
+    <div class="mq-two">
+      <div class="mq-board">
+        <span class="mq-cap">Clic derecho sobre el ícono</span>
+        <div class="mq-tray-stage">
+          <div class="mq-tray-menu"><span>Purga</span><hr><span>Abrir Purga</span><span>Escanear ahora</span><span>Ver programados (3)</span><hr><span>Pausar vigilancia 1 h</span><span class="off">Iniciar con Windows ✓</span><hr><span>Salir</span></div>
+          <div class="mq-tray-bar"><span>^</span><div class="mq-slot"><span class="mq-logo" style="width:18px;height:18px"></span></div><span>ESP</span><div class="clock">09:00<br>04/11/2026</div></div>
+        </div>
+      </div>
+      <div class="mq-board">
+        <span class="mq-cap">Avisos</span>
+        <div class="mq-notes" style="display:flex;flex-direction:column;gap:12px">
+          <div class="mq-winnote"><header><span class="mq-logo" style="width:16px;height:16px"></span>Purga</header><b>Mañana se eliminan 3 archivos</b><p>412 MB de Descargas irán a la Papelera de reciclaje.</p><div class="acts"><button class="mq-btn small" type="button">Ver</button><button class="mq-btn small" type="button">Posponer 7 días</button></div></div>
+          <div class="mq-winnote"><header><span class="mq-logo" style="width:16px;height:16px"></span>Purga</header><b>Vence en 7 días: poliza_auto_2026.pdf</b><p>Lo marcaste para conservar hasta el 11/11/2026.</p><div class="acts"><button class="mq-btn small" type="button">Abrir</button><button class="mq-btn small" type="button">Cambiar fecha</button></div></div>
+          <div class="mq-winnote"><header><span class="mq-logo" style="width:16px;height:16px"></span>Purga · resumen semanal</header><b>Puedes liberar 6,4 GB</b><p>5 propuestas por revisar y 3 grupos de duplicados.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 8 · AYUDA ============ -->
+  <section class="mq-sheet" id="ayuda">
+    <div class="mq-sheet-head"><span class="mq-no">LÁMINA 8</span><h2>Ayuda y Acerca de</h2><span class="mq-seal built">Construido</span><span class="mq-src">src/shared/help.ts · AboutDialog</span></div>
+    <p class="mq-lede">El menú Ayuda lleva Guía de uso (F1), Lo que conviene saber, Notas de la versión, Registro y Acerca de. App personal: © Jhovanny Linares, licencia MIT, versión inicial 0.1.0. Las versiones de Electron y Windows las lee la app al abrir el diálogo; van entre corchetes.</p>
+    <div class="mq-board">
+      <div class="mq-tabs" role="tablist" aria-label="Pantallas de la Ayuda">
+        <button type="button" data-help-tab="about" class="on">Acerca de</button><button type="button" data-help-tab="guide">Guía de uso</button><button type="button" data-help-tab="know">Lo que conviene saber</button><button type="button" data-help-tab="log">Registro</button>
+      </div>
+      <div class="mq-help-stage"><div class="win mq-static" id="mq-help" style="width:100%;max-width:620px"></div></div>
+    </div>
+  </section>
+
+  <!-- ============ 9 · CLIC DERECHO ============ -->
+  <section class="mq-sheet" id="explorador">
+    <div class="mq-sheet-head"><span class="mq-no">LÁMINA 9</span><h2>Clic derecho en el Explorador: programar eliminación</h2><span class="mq-seal built">Construido</span><span class="mq-src">HKCU\Software\Classes\*\shell · second-instance</span></div>
+    <p class="mq-lede">Un verbo del menú clásico, registrado por usuario sin administrador. En Windows 11 aparece en «Mostrar más opciones» (o Mayús + F10). Abre el diálogo de Purga aunque esté en la bandeja; varios archivos seleccionados llegan juntos en un solo lote. El menú es de Windows: se dibuja con los colores de la página.</p>
+    <div class="mq-two">
+      <div class="mq-board">
+        <span class="mq-cap">Menú clásico del Explorador</span>
+        <div class="mq-tray-stage" style="align-items:flex-start">
+          <div class="mq-tray-menu" style="min-width:300px">
+            <span class="off">Abrir</span><span class="off">Abrir con</span><hr>
+            <span class="mq-new"><span class="mq-logo" style="width:16px;height:16px"></span>Programar eliminación con Purga…</span>
+            <span class="off">Compartir</span><span class="off">Enviar a</span><hr><span class="off">Cortar</span><span class="off">Copiar</span><hr><span class="off">Propiedades</span>
+          </div>
+        </div>
+        <p class="mq-note">Lo punteado es lo que agrega Purga. El instalador lo registra, la desinstalación lo borra y Configuración tiene una casilla para quitarlo.</p>
+      </div>
+      <div class="mq-board">
+        <span class="mq-cap">Lo que abre: 3 archivos de un mismo clic</span>
+        <div class="win mq-static"><div class="backdrop"><div class="dialog"><div class="dialog-head"><span class="dialog-title">Eliminar el…</span><span class="dialog-x">×</span></div>
+          <div class="dialog-body"><span>3 archivos desde el Explorador · 412 MB</span>
+            <div class="value-box" style="white-space:normal;font-size:12px">setup_zoom_6.2.exe<br>dataset_ventas_2024.zip<br>WhatsApp Image 2026-08-02 at 10.14.33.jpeg</div>
+            <div class="chips"><button type="button" class="chip">en 7 días</button><button type="button" class="chip on">en 30 días</button><button type="button" class="chip">en 90 días</button></div>
+            <div class="field"><span class="label accent">O una fecha</span><input type="date" value="2026-12-04"></div>
+            <span class="hint">Ese día irán a la Papelera de reciclaje; te aviso el día anterior. Si los mueves de carpeta, la marca los sigue.</span></div>
+          <div class="dialog-foot"><button class="btn" type="button">Cancelar</button><button class="btn primary" type="button">Eliminar el 04/12/2026</button></div></div></div></div>
+      </div>
+    </div>
+    <div class="mq-board">
+      <h3>Si el archivo se mueve después de marcarlo</h3>
+      <div class="mq-table-scroll"><table class="mq-table"><thead><tr><th>Caso</th><th>Cómo lo encuentra Purga</th><th>Resultado</th></tr></thead><tbody>
+        <tr><td>Se mueve o renombra en el mismo disco, aunque sea fuera de las carpetas vigiladas</td><td><code>OpenFileById</code> con el File ID guardado y <code>GetFinalPathNameByHandle</code></td><td><span class="badge ok">La marca sigue</span> y se actualiza la ruta</td></tr>
+        <tr><td>Se mueve a otro disco</td><td>Nace con otro File ID: se busca por hash en las carpetas vigiladas</td><td><span class="badge new">Sigue si lo encuentra</span> · si no, «No encontrado» y aviso</td></tr>
+        <tr><td>Se borró a mano</td><td>El File ID ya no abre nada</td><td><span class="badge">Marca cerrada</span> «ya no existe»</td></tr>
+        <tr><td>En la fecha, el archivo no es el mismo (File ID reutilizado, tamaño o hash distintos)</td><td>Se compara contra lo guardado al marcarlo</td><td><span class="badge warn">No se borra</span> · pasa a «Revisar»</td></tr>
+      </tbody></table></div>
+      <p class="mq-note">Los archivos marcados desde el clic derecho entran al índice como «sueltos»: se siguen por File ID aunque su carpeta no esté vigilada.</p>
+    </div>
+  </section>
+
+  <!-- ============ 10 · FOTOS ============ -->
+  <section class="mq-sheet" id="fotos">
+    <div class="mq-sheet-head"><span class="mq-no">LÁMINA 10</span><h2>Fotos: la mejor de las parecidas y ordenar por fecha</h2><span class="mq-seal built">Construido</span><span class="mq-src">src/backend/photos.ts · src/shared/photos.ts · PhotosView</span></div>
+    <p class="mq-lede">Sin IA: las parecidas se agrupan con un hash perceptual (huella de 64 bits de cómo se ve la foto; distancia ≤ 8 = misma foto), y la calidad y la fecha se miden en el archivo. Se prueba en el prototipo, vista Fotos.</p>
+    <div class="mq-two">
+      <div class="mq-board">
+        <h3>Cuál se conserva, en este orden</h3>
+        <div class="mq-table-scroll"><table class="mq-table"><thead><tr><th>#</th><th>Criterio</th><th>Por qué</th></tr></thead><tbody>
+          <tr><td>1</td><td>Más píxeles</td><td>La reenviada o redimensionada pierde resolución</td></tr>
+          <tr><td>2</td><td>Menos compresión: RAW &gt; HEIC/PNG &gt; JPEG; en JPEG, la calidad de sus tablas de cuantización</td><td>WhatsApp y las redes recomprimen</td></tr>
+          <tr><td>3</td><td>Conserva el EXIF original</td><td>Señal de que es la original</td></tr>
+          <tr><td>4</td><td>Más nítida (varianza del Laplaciano)</td><td>Desempata ráfagas casi iguales</td></tr>
+          <tr><td>5</td><td>La más antigua</td><td>Último desempate</td></tr>
+        </tbody></table></div>
+        <p class="mq-note">La mejor queda «Conservar»; las otras, propuesta de eliminar. Se puede preferir otra con un clic.</p>
+      </div>
+      <div class="mq-board">
+        <h3>De dónde sale la fecha y qué se mueve solo</h3>
+        <div class="mq-table-scroll"><table class="mq-table"><thead><tr><th>Fuente</th><th>Confianza</th><th>Automático</th></tr></thead><tbody>
+          <tr><td>EXIF <code>DateTimeOriginal</code></td><td><span class="badge ok">alta</span></td><td>se mueve</td></tr>
+          <tr><td>Nombre: <code>IMG_20260802_…</code>, <code>WhatsApp Image 2026-08-02…</code></td><td><span class="badge ok">alta</span></td><td>se mueve</td></tr>
+          <tr><td>Fecha de modificación</td><td><span class="badge warn">baja</span></td><td>se propone, no se mueve</td></tr>
+        </tbody></table></div>
+        <p class="mq-note">Destino por defecto <code>{carpeta}\AAAA\AAAA-MM-DD</code> (o por año o mes). A mano: Mover o Copiar; copiar avisa el espacio. Automático: marca de carpeta «Ordenar fotos por fecha», solo mueve, con simulación la primera vez y Deshacer por lote. Nombre repetido → « (1)»; duplicado exacto en el destino → no se copia.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="mq-sheet" id="orden">
+    <div class="mq-sheet-head"><span class="mq-no">LÁMINA 11</span><h2>Ordenar los archivos y ver su actividad de un vistazo</h2><span class="mq-seal built">Construido</span><span class="mq-src">FileTable.tsx · shared/file-order.ts</span></div>
+    <p class="mq-lede">Cada encabezado de la tabla ordena por esa columna, y bajo los días sin actividad va una barra de color que dice si el archivo está en uso, quieto o dormido. Se prueba en el prototipo, vista Explorar o Búsqueda.</p>
+    <div class="mq-two">
+      <div class="mq-board">
+        <h3>Ordenar por columna</h3>
+        <div class="mq-table-scroll"><table class="mq-table"><thead><tr><th>Columna</th><th>Primer clic</th><th>Por qué ese sentido</th></tr></thead><tbody>
+          <tr><td>Nombre</td><td>A → Z</td><td>Como el Explorador</td></tr>
+          <tr><td>Origen</td><td>A → Z</td><td>Agrupa lo que vino del mismo lado</td></tr>
+          <tr><td>Actividad</td><td>Más inactivo primero</td><td>Lo que más sobra arriba</td></tr>
+          <tr><td>Tamaño</td><td>Más grande primero</td><td>Lo que más espacio libera arriba</td></tr>
+          <tr><td>Marca</td><td>A → Z</td><td>Junta las de la misma marca</td></tr>
+        </tbody></table></div>
+        <p class="mq-note">El segundo clic en la misma columna invierte el sentido; la flecha ▲▼ marca la columna activa. Sin clic, la tabla queda en el orden de siempre. El orden se recuerda por vista mientras la app está abierta y no cambia lo que hay elegido con las casillas.</p>
+        <button class="btn" type="button" id="mq-try-sort">Probar en el prototipo</button>
+      </div>
+      <div class="mq-board">
+        <h3>Barra de actividad</h3>
+        <div class="mq-table-scroll"><table class="mq-table"><thead><tr><th>Barra</th><th>Días sin abrir</th><th>Se lee</th></tr></thead><tbody>
+          <tr><td><span class="activity-bar ok mq-legend-bar"><i style="width:8%"></i></span></td><td>hasta 30</td><td>En uso</td></tr>
+          <tr><td><span class="activity-bar warn mq-legend-bar"><i style="width:35%"></i></span></td><td>31 a 180</td><td>Quieto</td></tr>
+          <tr><td><span class="activity-bar err mq-legend-bar"><i style="width:100%"></i></span></td><td>más de 180</td><td>Dormido</td></tr>
+        </tbody></table></div>
+        <p class="mq-note">Los días son los de la columna (última apertura, o la modificación si nunca se abrió). El largo crece con los días y se llena al año. El corte de 180 días es el mismo de «Más espacio sin abrir» en el Resumen. Los colores son los tokens <code>--ok</code>, <code>--warn</code> y <code>--err</code> de cada tema; el texto de la celda no cambia, así que el color nunca es la única pista.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="mq-sheet" id="listas">
+    <div class="mq-sheet-head"><span class="mq-no">LÁMINA 12</span><h2>Listas: el nombre arriba, la carpeta abajo y las acciones a mano</h2><span class="mq-seal built">Construido</span><span class="mq-src">FileTable · ProposalsView · SummaryView · Duplicados · DetailPanel · main/index.ts</span></div>
+    <p class="mq-lede">Hoy el Resumen y Duplicados muestran la ruta entera, y como empieza por «C:\Users\…\OneDrive – …», el corte se come el nombre. Propuesta: una sola forma de fila en todas las listas, el menú ⋮ en Propuestas, el origen en una línea, y «Abrir» con el programa de Windows. Pasa el mouse por las filas.</p>
+    <div class="mq-two">
+      <div class="mq-board">
+        <h3>Una fila de archivo, igual en todas las listas</h3>
+        <p class="mq-note" style="margin-top:0">Más espacio sin abrir (más de 180 días)</p>
+        <div class="pp-list">
+          <div class="pp-row" tabindex="0">
+            <div class="pp-file"><b>Capacitación - Charles Taylor - S2-29818.mp4</b><span class="pp-path" title="C:\Users\ejemplo\OneDrive - Empresa\Capacitación\2026\S2"><bdi>C:\Users\ejemplo\OneDrive - Empresa\Capacitación\2026\S2</bdi></span></div>
+            <div class="pp-acts"><span class="muted">8,7 MB</span><button class="pp-icon" type="button" title="Abrir con su programa">↗</button><button class="pp-icon" type="button" title="Mostrar en carpeta">📁</button></div>
+          </div>
+          <div class="pp-row" tabindex="0">
+            <div class="pp-file"><b>~$ZCS-11712-Q2.xlsx</b><span class="pp-path"><bdi>C:\Users\ejemplo\OneDrive - Empresa\Finanzas\Cierres\Q2</bdi></span></div>
+            <div class="pp-acts"><span class="muted">17,1 KB</span><button class="pp-icon" type="button" title="Abrir con su programa">↗</button><button class="pp-icon" type="button" title="Mostrar en carpeta">📁</button></div>
+          </div>
+        </div>
+        <p class="mq-note">Arriba el nombre en negrita; abajo la carpeta, recortada <b>por el inicio</b> («…\Capacitación\2026\S2»), que es la parte que distingue una ruta de otra. La ruta completa, al pasar el mouse. Abrir y Mostrar en carpeta aparecen al pasar el mouse o al llegar con el teclado. La misma fila se usa en Explorar, Búsqueda, Propuestas, Programados, Resumen y Duplicados.</p>
+        <p class="mq-note"><b>Tipografía:</b> nombre en Open Sans 13 px seminegrita; carpeta en Open Sans 12 px atenuada. La letra monoespaciada queda solo para lo que se escribe o se copia tal cual (campo de destino, registro, versiones), no para listas de rutas. Los tamaños son los de la escala de la familia (<code>--fs-xs</code> 11 · <code>--fs-sm</code> 12 · <code>--fs-base</code> 13 · <code>--fs-md</code> 15 · <code>--fs-lg</code> 18 · <code>--fs-xl</code> 22); ningún componente escribe un tamaño en px.</p>
+        <p class="mq-note" style="margin-top:6px">Duplicados · ~$ZCS-11712-Q2.xlsx · 5 copias</p>
+        <div class="pp-list">
+          <div class="pp-row" tabindex="0">
+            <div class="pp-file"><b><span class="badge ok">Conservar</span> ~$ZCS-11712-Q2.xlsx</b><span class="pp-path"><bdi>C:\Users\ejemplo\OneDrive - Empresa\Finanzas\Cierres\Q2</bdi></span></div>
+            <div class="pp-acts"><button class="pp-icon" type="button" title="Abrir con su programa">↗</button><button class="pp-icon" type="button" title="Mostrar en carpeta">📁</button></div>
+          </div>
+          <div class="pp-row" tabindex="0">
+            <div class="pp-file"><b><span class="badge new">Propuesta</span> ~$ZCS-11712-Q2.xlsx</b><span class="pp-path"><bdi>C:\Users\ejemplo\OneDrive - Empresa\Finanzas\Respaldo\Cierres\Q2</bdi></span></div>
+            <div class="pp-acts"><button class="pp-icon" type="button" title="Abrir con su programa">↗</button><button class="pp-icon" type="button" title="Mostrar en carpeta">📁</button></div>
+          </div>
+        </div>
+        <p class="mq-note">En Duplicados el nombre suele ser el mismo en todas las copias; lo que las distingue es la carpeta, por eso el recorte por el inicio importa más aquí.</p>
+      </div>
+      <div class="mq-board">
+        <h3>Propuestas: una acción con nombre y el resto en ⋮</h3>
+        <div class="pp-list">
+          <div class="pp-row">
+            <div class="pp-file"><b>setup_zoom_6.2.exe</b><span class="pp-path"><bdi>C:\Users\ejemplo\Descargas</bdi></span></div>
+            <div class="pp-acts always"><span class="muted">Instalador viejo</span><button class="btn small pp-danger" type="button">A la Papelera</button>
+              <span class="pp-menu-wrap"><button class="pp-icon" type="button" aria-expanded="true" title="Más opciones">⋮</button>
+                <span class="pp-menu" role="menu">
+                  <button type="button">Vista previa <small>Espacio</small></button>
+                  <button type="button">Mostrar en carpeta</button>
+                  <hr>
+                  <button type="button">Dejarlo <small>no se vuelve a proponer hasta que cambie</small></button>
+                  <button type="button">Conservar siempre <small>ninguna regla lo vuelve a tocar</small></button>
+                  <button type="button">Eliminar el…</button>
+                  <button type="button">Revisar el…</button>
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div style="height:190px"></div>
+        <div class="mq-table-scroll"><table class="mq-table"><thead><tr><th>Antes</th><th>Construido</th><th>Qué hace</th></tr></thead><tbody>
+          <tr><td>Aceptar (antes)</td><td><b>A la Papelera</b></td><td>Lo manda a la Papelera de Windows, con Deshacer</td></tr>
+          <tr><td>Rechazar (antes)</td><td>⋮ → Dejarlo</td><td>No lo borra; la regla no lo propone otra vez hasta que el archivo cambie</td></tr>
+          <tr><td>—</td><td>⋮ → Conservar siempre</td><td>Marca Conservar: ninguna regla lo vuelve a proponer</td></tr>
+        </tbody></table></div>
+        <p class="mq-note">«Aceptar todas» pasa a «Todas a la Papelera». Las fotos sin fecha confiable conservan su acción propia, «Ordenar por fecha».</p>
+      </div>
+    </div>
+    <div class="mq-two">
+      <div class="mq-board">
+        <h3>Origen en una línea</h3>
+        <dl class="pp-origin">
+          <dt>Origen</dt><dd><div class="pp-one"><span>Navegador · doc-10-ao-docstext.googleusercontent.com</span><a id="pp-origin-toggle">Ver enlace completo</a></div>
+            <div class="pp-full" id="pp-origin-full" hidden>https://doc-10-ao-docstext.googleusercontent.com/export/ejemplo/1jJ76nfFtzZdJigPKeCDAiVolJ?format=docx&amp;id=ejemplo&amp;token=…<br><button class="btn small" type="button" style="margin-top:6px">Copiar</button></div></dd>
+          <dt>Confianza</dt><dd>0,95 · Zone.Identifier</dd>
+        </dl>
+        <p class="mq-note">Se muestra el origen y el sitio (el dominio), en una línea. El enlace completo solo al pedirlo, con Copiar. La URL no se acorta en el índice: se guarda entera.</p>
+      </div>
+      <div class="mq-board">
+        <h3>«Abrir» usa el programa de Windows</h3>
+        <div class="mq-table-scroll"><table class="mq-table"><thead><tr><th>Tipo</th><th>Abrir</th></tr></thead><tbody>
+          <tr><td>PDF, Office, imágenes, video, texto, .zip</td><td>Con el programa predeterminado de Windows (Acrobat, Edge, Word…)</td></tr>
+          <tr><td>.exe, .msi, .bat, .cmd, .ps1, .vbs, .lnk</td><td>Solo <b>Mostrar en carpeta</b>: abrirlos los ejecutaría</td></tr>
+        </tbody></table></div>
+        <p class="mq-note">Se quita la ventana propia de Purga para PDF, que salía vacía. La vista previa del panel sigue igual (miniatura de Windows); su botón pasa a «Abrir con su programa».</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="mq-sheet" id="reglas">
+    <div class="mq-sheet-head"><span class="mq-no">LÁMINA 13</span><h2>Reglas en palabras simples, con explicación y reglas propias</h2><span class="mq-seal built">Construido</span><span class="mq-src">SmallViews (Reglas) · backend/rules.ts · i18n</span></div>
+    <p class="mq-lede">Cada regla se lee como una frase completa, con el número de días dentro de la frase. La ⓘ abre un panel con qué revisa, un ejemplo y qué nunca toca. «Nueva regla» arma una con condiciones fijas; como las de fábrica, solo propone.</p>
+    <div class="mq-two">
+      <div class="mq-board">
+        <h3>Reglas <span class="muted" style="font-weight:400">· solo proponen; ninguna borra</span> <button class="btn small primary" type="button" style="float:right">+ Nueva regla</button></h3>
+        <div class="pp-list">
+          <div class="pp-rule"><input type="checkbox" checked aria-label="Activa"><div><b>Descarga temporal</b><p>Lo bajaste de internet, WhatsApp o Telegram y no lo abres hace más de <input type="number" value="30"> días.</p></div><span class="row" style="gap:6px"><button class="pp-icon" type="button" title="Qué hace">ⓘ</button><button class="btn small" type="button">Simular</button></span></div>
+          <div class="pp-rule"><input type="checkbox" checked aria-label="Activa"><div><b>Borrador olvidado</b><p>El nombre dice que es un borrador y no lo abres hace más de <input type="number" value="60"> días.</p></div><span class="row" style="gap:6px"><button class="pp-icon" type="button" title="Qué hace">ⓘ</button><button class="btn small" type="button">Simular</button></span></div>
+          <div class="pp-rule"><input type="checkbox" checked aria-label="Activa"><div><b>Nombre de borrador</b><p>Marca como borrador lo que se llama «_v1», «copia», «(1)» o «final_final». No propone borrar nada.</p></div><span class="row" style="gap:6px"><button class="pp-icon" type="button" title="Qué hace">ⓘ</button><button class="btn small" type="button">Simular</button></span></div>
+          <div class="pp-rule"><input type="checkbox" checked aria-label="Activa"><div><b>Versión anterior</b><p>En la misma carpeta hay una versión más nueva, y esta no cambia hace más de <input type="number" value="30"> días.</p></div><span class="row" style="gap:6px"><button class="pp-icon" type="button" title="Qué hace">ⓘ</button><button class="btn small" type="button">Simular</button></span></div>
+          <div class="pp-rule"><input type="checkbox" checked aria-label="Activa"><div><b>Duplicado exacto</b><p>Es idéntico a otra copia que sí se conserva.</p></div><span class="row" style="gap:6px"><button class="pp-icon" type="button" title="Qué hace">ⓘ</button><button class="btn small" type="button">Simular</button></span></div>
+          <div class="pp-rule"><input type="checkbox" checked aria-label="Activa"><div><b>Archivos temporales</b><p>Archivos que Office o el navegador dejan a medias (temporales, descargas incompletas) con más de <input type="number" value="7"> días.</p></div><span class="row" style="gap:6px"><button class="pp-icon" type="button" title="Qué hace">ⓘ</button><button class="btn small" type="button">Simular</button></span></div>
+          <div class="pp-rule"><input type="checkbox" checked aria-label="Activa"><div><b>Instalador viejo</b><p>Instaladores (.exe, .msi) en Descargas con más de <input type="number" value="30"> días: el programa ya quedó instalado.</p></div><span class="row" style="gap:6px"><button class="pp-icon" type="button" title="Qué hace">ⓘ</button><button class="btn small" type="button">Simular</button></span></div>
+          <div class="pp-rule"><input type="checkbox" checked aria-label="Activa"><div><b>Videos de capacitación vistos</b> <span class="badge new">propia</span><p>En «OneDrive\Capacitación», archivos .mp4 sin abrir hace más de <input type="number" value="90"> días y de más de 50 MB.</p></div><span class="row" style="gap:6px"><button class="pp-icon" type="button" title="Editar">✎</button><button class="btn small" type="button">Simular</button></span></div>
+        </div>
+        <p class="mq-note">Se quitan del texto los códigos internos (BD-1…) y los patrones técnicos (<code>~$*</code>, <code>.crdownload</code>); siguen en el panel ⓘ para quien los busque. «Etiqueta «borrador»» pasa a «Nombre de borrador» y «Residuo de aplicación» a «Archivos temporales».</p>
+      </div>
+      <div class="mq-board">
+        <h3>Panel ⓘ: qué hace una regla</h3>
+        <div class="pp-side">
+          <h4>Descarga temporal</h4>
+          <dl>
+            <dt>Qué revisa</dt><dd>Archivos que llegaron del navegador, WhatsApp o Telegram y que no abriste en el plazo elegido.</dd>
+            <dt>Ejemplo</dt><dd>«WhatsApp Image 2026-08-02.jpeg» en Descargas, sin abrir hace 94 días.</dd>
+            <dt>Nunca toca</dt><dd>Lo marcado Conservar o Archivado, y lo que rechazaste antes si no cambió.</dd>
+            <dt>Cómo sabe el origen</dt><dd>La marca de descarga de Windows (Zone.Identifier), el nombre o la carpeta.</dd>
+            <dt>Hoy propone</dt><dd>36 archivos · 1,4 GB <a class="link">ver</a></dd>
+          </dl>
+        </div>
+        <h3 style="margin-top:14px">Nueva regla</h3>
+        <div class="pp-side">
+          <div class="pp-form">
+            <label>Nombre</label><input class="input" value="Videos de capacitación vistos">
+            <label>Dónde</label><span class="grow"><select class="input"><option>En la carpeta…</option><option>Con origen…</option><option>En cualquier lugar</option></select><input class="input" value="OneDrive\Capacitación" style="flex:1"><button class="btn small" type="button">Elegir…</button></span>
+            <label>Tipo de archivo</label><span class="grow"><input class="input" value=".mp4, .mov" style="flex:1"></span>
+            <label>El nombre contiene</label><span class="grow"><input class="input" placeholder="opcional" style="flex:1"></span>
+            <label>Sin abrir hace más de</label><span class="grow"><input class="input" type="number" value="90" style="width:70px"> días</span>
+            <label>Más grande que</label><span class="grow"><input class="input" type="number" value="50" style="width:70px"> MB <span class="muted">(opcional)</span></span>
+          </div>
+          <div class="notice" style="margin:0">Se cumplen todas las condiciones que llenes. Solo propone; nunca borra.</div>
+          <div class="row" style="gap:8px;justify-content:flex-end"><span class="muted grow">propondría 12 archivos · 2,1 GB</span><button class="btn small" type="button">Simular</button><button class="btn small primary" type="button">Guardar regla</button></div>
+        </div>
+        <p class="mq-note">Condiciones fijas, todas con Y. Una regla propia se edita (✎), se apaga o se elimina; las de fábrica solo se apagan o cambian sus días.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="mq-sheet" id="columnas">
+    <div class="mq-sheet-head"><span class="mq-no">LÁMINA 14</span><h2>Columnas a elección y con ancho ajustable, en todas las tablas</h2><span class="mq-seal built">Construido</span><span class="mq-src">shared/table-columns.ts · ColumnTable.tsx · fileColumns.tsx</span></div>
+    <p class="mq-lede">Cada tabla lleva un <b>⋮ en su propio encabezado</b>, a la derecha de los títulos. Abre una ventana flotante con las columnas de <b>esa</b> tabla: se marcan las que se quieren ver, y la elección se guarda al instante y se mantiene al reiniciar Purga. El ancho se cambia arrastrando el borde de cada título. Está en el prototipo (lámina 4), en el encabezado de cada tabla. Aquí, el detalle: el ⋮ abre y cierra la ventana, las casillas prenden y apagan columnas de verdad, y los bordes se arrastran.</p>
+    <div class="mq-board">
+      <h3>Explorar, con «Tipo» agregado y la ventana de columnas abierta</h3>
+      <div class="cc-wrap">
+        <div class="cc-table" id="cc-table">
+          <div class="cc-head">
+            <span class="cc-th" data-col="name" style="width:280px">Nombre<i class="cc-grip"></i></span>
+            <span class="cc-th" data-col="kind" style="width:150px">Tipo<i class="cc-grip"></i></span>
+            <span class="cc-th" data-col="origin" style="width:110px">Origen<i class="cc-grip"></i></span>
+            <span class="cc-th" data-col="activity" style="width:120px">Actividad<i class="cc-grip"></i></span>
+            <span class="cc-th num" data-col="size" style="width:90px">Tamaño<i class="cc-grip"></i></span>
+            <span class="cc-th cc-colbtn"><button class="icon-btn on" type="button" id="cc-more" title="Columnas de esta tabla" aria-label="Columnas de esta tabla" aria-expanded="true"><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><circle cx="8" cy="3.5" r="1.1"/><circle cx="8" cy="8" r="1.1"/><circle cx="8" cy="12.5" r="1.1"/></svg></button>
+              <span class="cc-menu" role="dialog" aria-label="Columnas de Explorar" id="cc-menu">
+                <b class="cc-menu-title">Columnas de Explorar</b>
+                <label><input type="checkbox" checked disabled> Nombre <small>siempre visible</small></label>
+                <label><input type="checkbox" checked data-colid="kind"> Tipo</label>
+                <label><input type="checkbox" data-colid="ext"> Extensión</label>
+                <label><input type="checkbox" checked data-colid="origin"> Origen</label>
+                <label><input type="checkbox" data-colid="site"> Sitio de origen</label>
+                <label><input type="checkbox" checked data-colid="activity"> Actividad</label>
+                <label><input type="checkbox" data-colid="opened"> Abierto</label>
+                <label><input type="checkbox" data-colid="modified"> Modificado</label>
+                <label><input type="checkbox" checked data-colid="size"> Tamaño</label>
+                <label><input type="checkbox" data-colid="mark"> Marca</label>
+                <label><input type="checkbox" data-colid="tags"> Etiquetas</label>
+                <label><input type="checkbox" data-colid="note"> Nota</label>
+                <hr><span class="hint">Se guarda al instante; se mantiene al reiniciar Purga.</span><button type="button" id="cc-reset">Volver a lo de fábrica</button>
+              </span>
+            </span>
+          </div>
+          <div class="cc-row"><span style="width:280px"><b>contrato_arriendo_2025.pdf</b><small><bdi>C:\Users\…\Documentos\Contratos</bdi></small></span><span style="width:150px">Documento PDF</span><span style="width:110px">Correo</span><span style="width:120px">40 días</span><span class="num" style="width:90px">1,2 MB</span></div>
+          <div class="cc-row"><span style="width:280px"><b>presupuesto_casa.xlsx</b><small><bdi>C:\Users\…\Documentos</bdi></small></span><span style="width:150px">Hoja de Excel</span><span style="width:110px">Local</span><span style="width:120px">15 días</span><span class="num" style="width:90px">58 KB</span></div>
+          <div class="cc-row"><span style="width:280px"><b>WhatsApp Image 2026-08-02.jpeg</b><small><bdi>C:\Users\…\Descargas</bdi></small></span><span style="width:150px">Imagen JPEG</span><span style="width:110px">WhatsApp</span><span style="width:120px">94 días</span><span class="num" style="width:90px">210 KB</span></div>
+        </div>
+      </div>
+      <p class="mq-note"><b>Cada tabla tiene su propio ⋮</b> (Explorar, Búsqueda, Propuestas, Programados, Vencimientos, Duplicados, Carpetas vigiladas) y su propia elección: apagar «Origen» en Explorar no lo apaga en Propuestas. La ventana se cierra con el mismo ⋮, con Escape o con un clic fuera. El borde derecho de cada título se arrastra (el cursor cambia a ↔); doble clic en el borde vuelve al ancho de fábrica. Así se arregla lo que hoy pasa en Explorar a 1100 px: Marca se corta a la derecha y Nombre queda angosto. Cada columna tiene un ancho mínimo que deja leer su título entero. Si la suma pasa el ancho de la vista, la tabla se desplaza hacia el costado; nada se encima. Clic en un título sigue ordenando (lámina 11).</p>
+    </div>
+    <div class="mq-two">
+      <div class="mq-board">
+        <h3>Qué columnas vienen encendidas en cada tabla</h3>
+        <div class="mq-table-scroll"><table class="mq-table"><thead><tr><th>Tabla</th><th>Encendidas de fábrica</th></tr></thead><tbody>
+          <tr><td>Explorar y Búsqueda</td><td>Nombre · Origen · Actividad · Tamaño · Marca</td></tr>
+          <tr><td>Propuestas</td><td>Nombre · Regla · Tamaño</td></tr>
+          <tr><td>Programados</td><td>Nombre · Fecha programada · Tamaño</td></tr>
+          <tr><td>Vencimientos</td><td>Nombre · Vence · Estado · Marca</td></tr>
+          <tr><td>Duplicados</td><td>Nombre · Modificado · Tamaño</td></tr>
+          <tr><td>Carpetas vigiladas</td><td>Carpeta · Archivos · Extensiones (su propio juego: Marca de carpeta, Etiquetas)</td></tr>
+        </tbody></table></div>
+        <p class="mq-note">Todas las tablas de archivos ofrecen las mismas columnas del menú; la de Propuestas suma «Regla», Programados «Fecha programada» y Vencimientos «Vence» y «Estado». Las acciones de la fila (Abrir, Mostrar en carpeta, ⋮) no son una columna: siempre al final.</p>
+      </div>
+      <div class="mq-board">
+        <h3>Qué se recuerda y qué no</h3>
+        <div class="mq-table-scroll"><table class="mq-table"><thead><tr><th>Qué</th><th>Construido</th></tr></thead><tbody>
+          <tr><td>Columnas visibles y anchos</td><td>Por tabla, en las preferencias de Purga (<code>%APPDATA%\Purga</code>); sobreviven al cierre y a reinstalar</td></tr>
+          <tr><td>Reordenar arrastrando</td><td>No en esta fase: orden fijo y lógico</td></tr>
+          <tr><td>Preferencia rota</td><td>La tabla vuelve a lo de fábrica y se anota en el registro</td></tr>
+          <tr><td>«Tipo»</td><td>Nombre legible de la extensión, en los dos idiomas: «Documento PDF», «Hoja de Excel», «Imagen JPEG»; si no se conoce, «Archivo .xyz»</td></tr>
+        </tbody></table></div>
+        <p class="mq-note">El componente va también a la familia (<code>maqueta-app</code>, «Listas y acciones»): todas las apps tienen tablas.</p>
+      </div>
+    </div>
+  </section>
+  <section class="mq-sheet" id="excluir">
+    <div class="mq-sheet-head"><span class="mq-no">LÁMINA 15</span><h2>Excluir subcarpetas sin confundirlas con extensiones</h2><span class="mq-seal">Propuesta · pendiente de aprobación</span><span class="mq-src">roots.ts · scan.ts · SettingsView (Editar) · FileTable (clic derecho)</span></div>
+    <p class="mq-lede">Hoy, para no revisar <code>Downloads\npp.8.7.7.portable.x64</code>, lo natural es abrir «Editar» en Configuración, y ahí solo hay extensiones: escribir el nombre de la carpeta como extensión no excluye nada. La propuesta está aplicada sobre el prototipo (lámina 4) con borde punteado: <b>Configuración → Editar</b> trae «Subcarpetas excluidas», <b>clic derecho sobre un archivo en Explorar</b> trae «Excluir carpeta…», y el campo de extensiones avisa si lo escrito parece una carpeta.</p>
+    <div class="mq-two">
+      <div class="mq-board">
+        <h3>Qué cambia</h3>
+        <div class="mq-table-scroll"><table class="mq-table"><thead><tr><th>Hoy</th><th>Propuesta</th></tr></thead><tbody>
+          <tr><td>«Excluir» escondido en la marca de carpeta («Cambiar»)</td><td>«Subcarpetas excluidas» en <b>Configuración → Editar</b>, junto a las extensiones, con «Elegir subcarpeta…»</td></tr>
+          <tr><td>Patrón por nombre: <code>t</code> omite toda carpeta llamada «t» en cualquier nivel</td><td><b>Por ruta</b> desde la carpeta vigilada: <code>npp.8.7.7.portable.x64</code> omite solo esa. Los patrones de nombre (<code>node_modules</code>, <code>*.tmp</code>) siguen, en su propio campo</td></tr>
+          <tr><td>Lo ya indexado queda como «Ya no existe»</td><td><b>Sale del índice</b>. Lo que tiene marca, nota o etiqueta se conserva como archivo suelto, igual que al dejar de vigilar</td></tr>
+          <tr><td>El editor de extensiones acepta <code>.npp.8.7.7.portable.x64</code> en silencio</td><td>Avisa: «parece el nombre de una carpeta» y ofrece <b>Excluir como subcarpeta</b></td></tr>
+          <tr><td>—</td><td>Clic derecho sobre un archivo en Explorar → <b>Excluir carpeta…</b>: elige entre las subcarpetas que lo contienen, con cuántos archivos saldrían</td></tr>
+        </tbody></table></div>
+      </div>
+      <div class="mq-board">
+        <h3>Cómo se ve en el prototipo</h3>
+        <div class="mq-table-scroll"><table class="mq-table"><thead><tr><th>Dónde</th><th>Prueba</th></tr></thead><tbody>
+          <tr><td>Configuración → «Editar» de Descargas</td><td>Escribe <code>npp.8.7.7.portable.x64</code> en «otra extensión»: aparece el aviso con «Excluir como subcarpeta»</td></tr>
+          <tr><td>Explorar → Descargas, clic derecho sobre <code>6Registros.json…</code></td><td>«Excluir carpeta…» ofrece <code>npp.8.7.7.portable.x64</code> y <code>npp.8.7.7.portable.x64\backup</code>; al excluir, el archivo sale de la lista</td></tr>
+          <tr><td>Configuración → «Editar» otra vez</td><td>La subcarpeta aparece en la lista, con × para volver a incluirla</td></tr>
+        </tbody></table></div>
+        <p class="mq-note">Una «extensión» parece carpeta si trae barras, varios puntos (salvo <code>.tar.gz</code>), espacios o más de 12 letras sin punto. Al excluir, Purga vuelve a revisar la carpeta sola, sin «Escanear ahora».</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+/*__MAQUETA_JS__*/
+</script>
+<script>
+(() => {
+  const { $, $$, escapeHtml: esc } = MQ
+  const DAY_MS = 86400000
+  const TODAY = new Date('2026-11-04T09:00:00')
+
+  // ---------- contrato de colores: para las muestras de la lámina 1 ----------
+  const TOKENS = [['--bg', 'fondo'], ['--panel', 'superficie'], ['--bar', 'barras'], ['--toolbar', 'herramientas'], ['--field', 'campos'], ['--text', 'texto'], ['--text-strong', 'texto fuerte'], ['--muted', 'secundario'], ['--brand', 'marca'], ['--accent', 'acción'], ['--accent-text', 'acción en texto'], ['--link', 'enlace'], ['--ok', 'bien'], ['--warn', 'atención'], ['--err', 'error']]
+
+  // ---------- datos de ejemplo ----------
+  const MARKS = {
+    none: { label: 'Sin revisar', badge: '', what: 'Por defecto. Las reglas pueden proponer algo.' },
+    keep: { label: 'Conservar', badge: 'ok', what: 'Las reglas no lo tocan. Vencimiento opcional.' },
+    delete: { label: 'Eliminar', badge: 'err', what: 'Va a la Papelera al confirmar el lote.' },
+    deleteOn: { label: 'Eliminar el', badge: 'warn', what: 'Ese día va a la Papelera, con aviso el día antes.' },
+    reviewOn: { label: 'Revisar el', badge: 'new', what: 'Ese día vuelve a «Sin revisar» y avisa.' },
+    archived: { label: 'Archivado', badge: '', what: 'Se conserva sin vencimiento.' },
+  }
+  const baseFiles = () => [
+    { id: 1, name: 'contrato_arriendo_2025.pdf', dir: 'Documentos\\Contratos', origin: 'Correo', evidence: 'ruta de adjuntos de Outlook · 0,9', opened: 40, modified: 300, size: '1,2 MB', mark: 'keep', expires: '2026-12-01', note: 'Renovar con la inmobiliaria', folderRule: true },
+    { id: 2, name: 'poliza_auto_2026.pdf', dir: 'Documentos\\Contratos', origin: 'Correo', evidence: 'ruta de adjuntos de Outlook · 0,9', opened: 120, modified: 365, size: '640 KB', mark: 'keep', expires: '2026-11-11', folderRule: true },
+    { id: 3, name: 'setup_zoom_6.2.exe', dir: 'Descargas', origin: 'Navegador', evidence: 'Zone.Identifier · zoom.us · 0,95', opened: null, modified: 61, size: '88 MB', mark: 'deleteOn', due: '2026-11-05', proposal: 'Instalador viejo' },
+    { id: 4, name: 'WhatsApp Image 2026-08-02 at 10.14.33.jpeg', dir: 'Descargas', origin: 'WhatsApp', evidence: 'nombre y carpeta · 0,85', opened: 94, modified: 94, size: '210 KB', mark: 'none', proposal: 'Descarga temporal' },
+    { id: 5, name: 'informe_q3_v2.docx', dir: 'Documentos\\Trabajo', origin: 'Local', evidence: 'sin marca de origen', opened: 74, modified: 74, size: '340 KB', mark: 'none', proposal: 'Versión anterior' },
+    { id: 6, name: 'informe_q3_v3_final.docx', dir: 'Documentos\\Trabajo', origin: 'Local', evidence: 'sin marca de origen', opened: 3, modified: 12, size: '352 KB', mark: 'none' },
+    { id: 7, name: 'factura_octubre (1).pdf', dir: 'Descargas', origin: 'Navegador', evidence: 'Zone.Identifier · 0,95', opened: 33, modified: 33, size: '96 KB', mark: 'none', proposal: 'Duplicado exacto', dup: 8 },
+    { id: 8, name: 'factura_octubre.pdf', dir: 'Descargas', origin: 'Navegador', evidence: 'Zone.Identifier · 0,95', opened: 33, modified: 33, size: '96 KB', mark: 'none', dup: 7 },
+    { id: 9, name: 'dataset_ventas_2024.zip', dir: 'Descargas', origin: 'Navegador', evidence: 'Zone.Identifier · 0,95', opened: 210, modified: 210, size: '324 MB', mark: 'deleteOn', due: '2026-11-05' },
+    { id: 10, name: 'tesis_final.pdf', dir: 'Documentos', origin: 'Local', evidence: 'sin marca de origen', opened: 820, modified: 900, size: '4,8 MB', mark: 'archived' },
+    { id: 11, name: 'presupuesto_casa.xlsx', dir: 'Documentos', origin: 'Local', evidence: 'sin marca de origen', opened: 15, modified: 20, size: '58 KB', mark: 'reviewOn', due: '2026-12-15', note: 'Ver si sigue sirviendo después de la mudanza' },
+    { id: 12, name: 'captura_error_vpn.png', dir: 'Descargas', origin: 'Captura', evidence: 'nombre · 0,8', opened: 4, modified: 4, size: '1,1 MB', mark: 'delete', modifiedAfterMark: true },
+    { id: 13, name: 'respaldo_fotos_2019.zip', dir: 'USB E:\\Respaldos', origin: 'Local', evidence: 'sin marca de origen', opened: 700, modified: 900, size: '2,3 GB', mark: 'none', noRecycleBin: true },
+    { id: 14, name: '6Registros.json@2025-10-21_180949', dir: 'Descargas\\npp.8.7.7.portable.x64\\backup', origin: 'Local', evidence: 'sin marca de origen', opened: null, modified: 380, size: '41 KB', mark: 'none', tags: [] },
+    { id: 15, name: 'AbstractView.xml', dir: 'Descargas\\sqldeveloper\\extensions\\oracle.datamodeler', origin: 'Local', evidence: 'sin marca de origen', opened: null, modified: 646, size: '5,1 KB', mark: 'none', tags: [] },
+  ]
+  const TAGS_BY_FILE = { 1: ['legal', 'casa'], 2: ['legal', 'auto'], 4: ['whatsapp'], 5: ['trabajo'], 6: ['trabajo'], 7: ['facturas'], 8: ['facturas'], 11: ['casa'], 13: ['respaldo'] }
+  const fileData = () => baseFiles().map((file) => ({ ...file, tags: [...(TAGS_BY_FILE[file.id] || [])] }))
+  const SAVED_SEARCHES = [
+    { name: 'Descargas viejas de WhatsApp', filters: { origin: 'WhatsApp', days: 60 } },
+    { name: 'Facturas', filters: { tag: 'facturas' } },
+  ]
+  // textos copiados de src/shared/i18n.ts (rules.bdNCondition, What, Example, Tech)
+  const RULES = [
+    { name: 'Descarga temporal', sentence: 'Lo bajaste de internet, WhatsApp o Telegram y no lo abres hace más de {days} días.', days: 30, sim: '1.204 archivos · 3,9 GB',
+      what: 'Archivos que llegaron del navegador, WhatsApp o Telegram y que no abriste en el plazo elegido.', example: '«WhatsApp Image 2026-08-02.jpeg» en Descargas, sin abrir hace 94 días.', tech: 'El origen sale de la marca de descarga de Windows (Zone.Identifier), del nombre o de la carpeta. Cuenta desde la última apertura, o desde la modificación si nunca se abrió.' },
+    { name: 'Borrador olvidado', sentence: 'El nombre dice que es un borrador y no lo abres hace más de {days} días.', days: 60, sim: '86 archivos · 140 MB',
+      what: 'Archivos cuyo nombre dice borrador, copia o versión, y que nadie abre hace tiempo.', example: '«informe_borrador.docx», sin abrir hace 75 días.', tech: 'Nombre con borrador, draft, _v1, v2, copy, copia, (1) o final_final.' },
+    { name: 'Nombre de borrador', sentence: 'Marca como borrador lo que se llama «_v1», «copia», «(1)» o «final_final». No propone borrar nada.', days: null, sim: '212 archivos',
+      what: 'Pone la etiqueta «borrador» a los archivos cuyo nombre lo delata, para encontrarlos en la búsqueda.', example: '«presupuesto_v1.xlsx» queda con #borrador.', tech: 'Los mismos patrones de nombre que «Borrador olvidado». Solo etiqueta.' },
+    { name: 'Versión anterior', sentence: 'En la misma carpeta hay una versión más nueva, y esta no cambia hace más de {days} días.', days: 30, sim: '41 archivos · 92 MB',
+      what: 'Cuando hay varias versiones del mismo archivo en una carpeta, propone las anteriores; la más nueva se queda.', example: '«informe_q3_v2.docx» junto a «informe_q3_v3_final.docx».', tech: 'Una familia es la misma carpeta y el mismo nombre sin las marcas de versión. Cuenta desde la modificación de la versión anterior.' },
+    { name: 'Duplicado exacto', sentence: 'Es idéntico a otra copia que sí se conserva.', days: null, sim: '37 archivos · 410 MB',
+      what: 'Copias con exactamente el mismo contenido que otra. La copia que se conserva no se propone.', example: '«factura_octubre (1).pdf», idéntica a «factura_octubre.pdf».', tech: 'Se compara el contenido completo (hash). Se conserva la copia que está fuera de Descargas, o la más antigua. Los bloqueos de Office («~$…») no cuentan como duplicados.' },
+    { name: 'Archivos temporales', sentence: 'Archivos que Office o el navegador dejan a medias (temporales, descargas incompletas) con más de {days} días.', days: 7, sim: '318 archivos · 1,1 GB',
+      what: 'Restos que Office o el navegador dejan cuando algo se cierra a medias.', example: '«~$informe.docx» o «video.crdownload» de hace dos semanas.', tech: 'Nombres que empiezan por ~$ y extensiones .tmp, .crdownload y .part. Cuenta desde la modificación.' },
+    { name: 'Instalador viejo', sentence: 'Instaladores (.exe, .msi) en Descargas con más de {days} días: el programa ya quedó instalado.', days: 30, sim: '22 archivos · 1,6 GB',
+      what: 'Instaladores que quedaron en Descargas después de instalar el programa.', example: '«setup_zoom_6.2.exe» en Descargas, de hace dos meses.', tech: 'Archivos .exe y .msi dentro de una carpeta Descargas o Downloads.' },
+  ]
+  const CUSTOM_RULES = [{ name: 'Videos de capacitación vistos', text: 'En «OneDrive\\Capacitación», archivos .mp4, sin abrir hace más de 90 días y de más de 50 MB.' }]
+  const ROOTS = [{ name: 'Descargas', path: 'C:\\Users\\…\\Downloads', files: '19.300', size: '41 GB', rule: 'Eliminar lo que tenga más de 30 días' }, { name: 'Documentos', path: 'C:\\Users\\…\\Documents', files: '28.912', size: '63 GB', rule: 'Hereda la global' }]
+  const EXT_GROUPS = { documentos: ['pdf', 'docx', 'xlsx', 'pptx', 'txt', 'csv'], imágenes: ['jpg', 'jpeg', 'png', 'heic'], video: ['mp4', 'mov', 'mkv'], comprimidos: ['zip', 'rar', '7z'], instaladores: ['exe', 'msi'], temporales: ['tmp', 'crdownload', 'part'] }
+
+  const state = { rootExcludes: {}, ruleInfo: null, ruleForm: false, scenario: 'sample', view: 'summary', files: fileData(), selected: new Set(), detail: 3, folder: 'Descargas', photoTab: 'similar', photoDays: new Set(), filters: { text: '', origin: '', days: 0, mark: '', tag: '' }, sort: null, excluded: new Set(['tmp', 'crdownload', 'part']), extMode: 'deny', language: 'system', tray: true, startup: false, lastBatch: null }
+  const win = $('#app')
+
+  // ---------- formato ----------
+  const formatDate = (iso) => iso.split('-').reverse().join('/')
+  const daysUntil = (iso) => Math.round((new Date(iso + 'T09:00:00') - TODAY) / DAY_MS)
+  const inactivity = (file) => (file.opened == null ? `sin abrir · modif. hace ${file.modified} d` : `sin abrir hace ${file.opened} d`)
+
+  // ---------- propuesta: barra de actividad y orden por columna ----------
+  /** Hasta 30 días sin abrir: en uso. Hasta 180: quieto. Más: dormido (el mismo corte que «Más espacio sin abrir»). */
+  const ACTIVE_DAYS = 30
+  const DORMANT_DAYS = 180
+  /** La barra se llena al año sin actividad; más allá queda llena. */
+  const BAR_FULL_DAYS = 365
+  const BAR_MIN_PERCENT = 6
+  const ACTIVITY_LABEL = { ok: 'En uso', warn: 'Quieto', err: 'Dormido' }
+  const idleDays = (file) => file.opened ?? file.modified
+  function activityTone(days) {
+    if (days <= ACTIVE_DAYS) return 'ok'
+    if (days <= DORMANT_DAYS) return 'warn'
+    return 'err'
+  }
+  function activityBar(file) {
+    const days = idleDays(file)
+    const tone = activityTone(days)
+    const width = Math.max(BAR_MIN_PERCENT, (Math.min(days, BAR_FULL_DAYS) / BAR_FULL_DAYS) * 100)
+    return `<span class="activity-bar ${tone}" role="img" aria-label="${ACTIVITY_LABEL[tone]}" title="${ACTIVITY_LABEL[tone]} · ${days} días sin actividad"><i style="width:${width}%"></i></span>`
+  }
+  const SIZE_UNITS = { B: 1, KB: 1024, MB: 1024 ** 2, GB: 1024 ** 3 }
+  function sizeBytes(text) {
+    const [amount, unit] = text.split(' ')
+    return parseFloat(amount.replace(',', '.')) * (SIZE_UNITS[unit] ?? 1)
+  }
+  /** first: el sentido del primer clic, el que suele buscarse (lo más inactivo, lo más grande). */
+  const SORT_KEYS = {
+    name: { label: 'Nombre', first: 'asc', value: (file) => file.name.toLowerCase() },
+    origin: { label: 'Origen', first: 'asc', value: (file) => file.origin },
+    activity: { label: 'Actividad', first: 'desc', value: idleDays },
+    size: { label: 'Tamaño', first: 'desc', value: (file) => sizeBytes(file.size) },
+    mark: { label: 'Marca', first: 'asc', value: (file) => MARKS[file.mark].label }
+  }
+  function sortFiles(files) {
+    if (!state.sort) return files
+    const value = SORT_KEYS[state.sort.key].value
+    const direction = state.sort.dir === 'asc' ? 1 : -1
+    return [...files].sort((left, right) => {
+      const a = value(left)
+      const b = value(right)
+      if (a === b) return 0
+      return (a < b ? -1 : 1) * direction
+    })
+  }
+  function toggleSort(key) {
+    const sameColumn = state.sort?.key === key
+    const flipped = state.sort?.dir === 'asc' ? 'desc' : 'asc'
+    state.sort = { key, dir: sameColumn ? flipped : SORT_KEYS[key].first }
+    renderView()
+  }
+  function markBadge(file) {
+    const mark = MARKS[file.mark]
+    if (file.mark === 'delete' && file.modifiedAfterMark) return '<span class="badge warn">Revisar · cambió tras marcarlo</span>'
+    const when = file.due ? ` ${formatDate(file.due)}` : ''
+    const keepUntil = file.mark === 'keep' && file.expires ? ` · vence ${formatDate(file.expires)}` : ''
+    const proposed = file.mark === 'none' && file.proposal ? ` <span class="badge new">Propuesta: ${esc(file.proposal)}</span>` : ''
+    return `<span class="badge ${mark.badge}">${mark.label}${when}${keepUntil}</span>${proposed}`
+  }
+
+  // ---------- fila única de archivo (lámina 12): nombre arriba, carpeta abajo recortada por el inicio ----------
+  const RUNS_WHEN_OPENED = ['exe', 'msi', 'bat', 'cmd', 'ps1', 'vbs', 'js', 'lnk', 'hta', 'reg']
+  const fullFolder = (dir) => `C:\\Users\\…\\${dir}`
+  const fileLine = (name, folder, extra = '') => `<span class="file-line"><span class="file-name" title="${esc(name)}">${esc(name)}</span><span class="file-folder" title="${esc(folder)}"><bdi>${esc(folder)}</bdi></span>${extra}</span>`
+  const ICON_OPEN = '<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 2.5h4.5V7M13.5 2.5 7.5 8.5M12 9.5v3.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-8a.5.5 0 0 1 .5-.5H7"/></svg>'
+  const ICON_FOLDER = '<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5a1 1 0 0 1 1-1h3l1.5 1.5H13a1 1 0 0 1 1 1V12a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1z"/></svg>'
+  const ICON_MORE = '<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><circle cx="8" cy="3.5" r="1.1"/><circle cx="8" cy="8" r="1.1"/><circle cx="8" cy="12.5" r="1.1"/></svg>'
+  const ICON_INFO = '<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><circle cx="8" cy="8" r="6"/><path d="M8 7.5V11M8 5h.01"/></svg>'
+  const rowActs = (file) => `<span class="row-acts">${RUNS_WHEN_OPENED.includes(extensionOf(file.name)) ? '' : `<button class="icon-btn" type="button" title="Abrir con su programa" aria-label="Abrir con su programa" data-open="${file.id}">${ICON_OPEN}</button>`}<button class="icon-btn" type="button" title="Mostrar en carpeta" aria-label="Mostrar en carpeta" data-reveal="${file.id}">${ICON_FOLDER}</button></span>`
+  // menú ⋮ y clic derecho: el mismo panel, anclado a la ventana del prototipo
+  function openMenu(anchor, items, fromRight) {
+    $('.more-menu', win)?.remove()
+    const box = win.getBoundingClientRect()
+    const menu = document.createElement('div')
+    menu.className = 'ctx more-menu'
+    menu.setAttribute('role', 'menu')
+    menu.style.position = 'absolute'
+    menu.style.top = `${anchor.y - box.top}px`
+    if (fromRight) menu.style.right = `${box.right - anchor.x}px`
+    else menu.style.left = `${anchor.x - box.left}px`
+    menu.innerHTML = items.map((item) => item ? `<button type="button" role="menuitem" class="${item.hint ? 'with-hint' : ''}"><span>${item.label}</span>${item.hint ? `<small>${item.hint}</small>` : ''}</button>` : '<div class="ctx-separator"></div>').join('')
+    const real = items.filter(Boolean)
+    $$('button', menu).forEach((button, index) => { button.onclick = (event) => { event.stopPropagation(); menu.remove(); real[index].action() } })
+    win.appendChild(menu)
+    setTimeout(() => document.addEventListener('click', () => menu.remove(), { once: true }))
+  }
+  function confirmUnwatch(root) {
+    const dialog = MQ.dialog(win, { title: `Dejar de vigilar «${esc(root.name)}»`, body: `<span class="break-all muted">${esc(root.path)}</span><span>La carpeta y sus archivos se quedan en el disco: no se borra nada. Purga deja de revisarla, y del índice sale lo que no tiene una marca, una nota o una etiqueta tuya; eso se conserva.</span><span class="hint">Si cambias de idea, la vuelves a agregar y se indexa de nuevo.</span>`, foot: '<button class="btn" type="button" data-close>Cancelar</button><button class="btn danger" type="button" data-ok>Dejar de vigilar</button>' })
+    $('[data-close]', dialog.layer).onclick = dialog.close
+    $('[data-ok]', dialog.layer).onclick = () => { dialog.close(); MQ.toast(win, `${esc(root.name)} ya no se vigila.`) }
+  }
+
+  // ---------- columnas a elección y ancho ajustable (lámina 14, propuesta): ⋮ en el encabezado de cada tabla ----------
+  const KIND_NAMES = { pdf: 'Documento PDF', docx: 'Documento de Word', xlsx: 'Hoja de Excel', pptx: 'Presentación', jpg: 'Imagen JPEG', jpeg: 'Imagen JPEG', png: 'Imagen PNG', heic: 'Imagen HEIC', exe: 'Aplicación', msi: 'Instalador', zip: 'Comprimido ZIP', txt: 'Texto', csv: 'Texto CSV' }
+  const kindOf = (name) => KIND_NAMES[extensionOf(name)] || `Archivo .${extensionOf(name)}`
+  const scheduledBadge = (file) => file.due ? `<span class="badge ${file.mark === 'deleteOn' ? 'warn' : 'new'}">${formatDate(file.due)} · ${daysUntil(file.due) === 1 ? 'mañana' : `en ${daysUntil(file.due)} d`}</span>` : ''
+  const expiryTone = (file) => { const left = daysUntil(file.expires); return left < 0 ? 'err' : left <= 7 ? 'warn' : '' }
+  const nameCell = (file) => `<span class="name-cell">${fileLine(file.name, fullFolder(file.dir), file.tags?.length || file.note ? `<span class="sub">${file.tags?.length ? tagChips(file.tags) + ' ' : ''}${file.note ? `✎ ${esc(file.note)}` : ''}</span>` : '')}${rowActs(file)}</span>`
+  const FILE_COLUMNS = {
+    name: { label: 'Nombre', always: true, width: 136, min: 120, sort: 'name', cell: nameCell },
+    rule: { label: 'Regla', width: 170, min: 90, cell: (file) => `<span class="ellipsis">${esc(file.proposal || '')}</span>` },
+    due: { label: 'Fecha programada', width: 180, min: 150, cell: scheduledBadge },
+    expires: { label: 'Vence', width: 110, min: 80, cell: (file) => file.expires ? formatDate(file.expires) : '' },
+    status: { label: 'Situación', width: 130, min: 110, cell: (file) => { const left = daysUntil(file.expires); return `<span class="badge ${expiryTone(file) || 'new'}">${left < 0 ? `venció hace ${-left} d` : `en ${left} días`}</span>` } },
+    kind: { label: 'Tipo', width: 150, min: 80, cell: (file) => `<span class="ellipsis">${esc(kindOf(file.name))}</span>` },
+    ext: { label: 'Extensión', width: 100, min: 100, cell: (file) => `.${esc(extensionOf(file.name))}` },
+    origin: { label: 'Origen', width: 80, min: 80, sort: 'origin', cell: (file) => esc(file.origin) },
+    site: { label: 'Sitio de origen', width: 170, min: 140, cell: (file) => `<span class="ellipsis" title="${esc(file.evidence)}">${esc(file.evidence.split(' · ')[0])}</span>` },
+    activity: { label: 'Actividad', width: 100, min: 100, sort: 'activity', cell: (file) => `<span class="muted">${inactivity(file)}${activityBar(file)}</span>` },
+    opened: { label: 'Abierto', width: 110, min: 90, cell: (file) => file.opened == null ? 'nunca' : `hace ${file.opened} d` },
+    modified: { label: 'Modificado', width: 120, min: 110, cell: (file) => `hace ${file.modified} d` },
+    size: { label: 'Tamaño', width: 84, min: 84, num: true, sort: 'size', cell: (file) => file.size },
+    mark: { label: 'Marca', width: 130, min: 80, sort: 'mark', cell: (file) => `<span class="row" style="gap:4px;flex-wrap:wrap">${markBadge(file)}</span>` },
+    tags: { label: 'Etiquetas', width: 150, min: 100, cell: (file) => tagChips(file.tags || []) },
+    note: { label: 'Nota', width: 180, min: 80, cell: (file) => `<span class="ellipsis" title="${esc(file.note || '')}">${esc(file.note || '')}</span>` },
+  }
+  const FOLDER_COLUMNS = {
+    path: { label: 'Carpeta', always: true, width: 150, min: 120, cell: (root) => `<span class="ellipsis" title="${esc(root.path)}">${esc(root.path)}</span>` },
+    files: { label: 'Archivos', width: 110, min: 100, cell: (root) => `${root.files} · ${root.size}` },
+    extensions: { label: 'Extensiones', width: 120, min: 120, cell: () => 'hereda la global' },
+    folderMark: { label: 'Marca de carpeta', width: 200, min: 160, cell: (root) => `<span class="ellipsis" title="${esc(root.rule)}">${esc(root.rule)}</span>` },
+    folderTags: { label: 'Etiquetas', width: 150, min: 100, cell: () => '<span class="badge">#trabajo</span>' },
+  }
+  const FILE_EXTRA = ['kind', 'ext', 'origin', 'site', 'activity', 'opened', 'modified', 'size', 'mark', 'tags', 'note']
+  const TABLES = {
+    explore: { title: 'Explorar', columns: ['name', ...FILE_EXTRA], defaults: ['name', 'origin', 'activity', 'size', 'mark'], sortable: true },
+    search: { title: 'Búsqueda', columns: ['name', ...FILE_EXTRA], defaults: ['name', 'origin', 'activity', 'size', 'mark'], sortable: true },
+    proposals: { title: 'Propuestas', columns: ['name', 'rule', ...FILE_EXTRA], defaults: ['name', 'rule', 'size'] },
+    scheduled: { title: 'Programados', columns: ['name', 'due', ...FILE_EXTRA], defaults: ['name', 'due', 'size'] },
+    expiry: { title: 'Vencimientos', columns: ['name', 'expires', 'status', ...FILE_EXTRA], defaults: ['name', 'expires', 'status', 'mark'] },
+    duplicates: { title: 'Duplicados', columns: ['name', ...FILE_EXTRA], defaults: ['name', 'modified', 'size'] },
+    folders: { title: 'Carpetas vigiladas', folders: true, columns: ['path', 'files', 'extensions', 'folderMark', 'folderTags'], defaults: ['path', 'files', 'extensions'] },
+  }
+  // la elección se recuerda al recargar la maqueta, como la app la recuerda al reiniciar (allá va a sus preferencias)
+  const LAYOUT_KEY = 'purga-maqueta-columnas'
+  const layouts = (() => { try { return JSON.parse(localStorage.getItem(LAYOUT_KEY)) || {} } catch { return {} } })()
+  const saveLayouts = () => { try { localStorage.setItem(LAYOUT_KEY, JSON.stringify(layouts)) } catch { /* sin almacenamiento: vale hasta recargar */ } }
+  const catalogOf = (tableId) => TABLES[tableId].folders ? FOLDER_COLUMNS : FILE_COLUMNS
+  const visibleColumns = (tableId) => { const table = TABLES[tableId]; const chosen = layouts[tableId]?.visible || table.defaults; return table.columns.filter((id) => catalogOf(tableId)[id].always || chosen.includes(id)) }
+  const widthOf = (tableId, columnId) => layouts[tableId]?.widths?.[columnId] ?? catalogOf(tableId)[columnId].width
+  const TAIL_WIDTH = '40px'
+  // la columna que siempre se ve (Nombre, Carpeta) toma el sobrante: lo de fábrica cabe sin desplazar; las demás tienen
+  // su ancho en px, y solo al ensancharlas aparece el desplazamiento lateral (el ⋮ y las acciones quedan fijos a la derecha)
+  const track = (tableId, id) => catalogOf(tableId)[id].always ? `minmax(${widthOf(tableId, id)}px, 1fr)` : `${widthOf(tableId, id)}px`
+  // la que siempre se ve toma el sobrante solo mientras nadie la ajustó; ajustada, el sobrante pasa a las acciones del final
+  const flexibleColumn = (tableId) => visibleColumns(tableId).find((id) => catalogOf(tableId)[id].always && layouts[tableId]?.widths?.[id] === undefined)
+  const gridColumns = (tableId, leadWidth, tailWidth) => { const flexible = flexibleColumn(tableId); return [leadWidth, ...visibleColumns(tableId).map((id) => id === flexible ? `minmax(${widthOf(tableId, id)}px, 1fr)` : `${widthOf(tableId, id)}px`), flexible ? tailWidth : `minmax(${tailWidth}, 1fr)`].filter(Boolean).join(' ') }
+  // cada fila es su propia grilla: con el mismo ancho mínimo (la suma de las columnas) el sobrante se reparte igual en todas
+  // .tr de familia.css: 12 px entre columnas y 16 px de margen a cada lado
+  const ROW_GAP_PX = 12
+  const ROW_PADDING_PX = 32
+  function tableMinWidth(tableId, leadWidth, tailWidth) {
+    const tracks = [leadWidth, tailWidth, ...visibleColumns(tableId).map((id) => `${widthOf(tableId, id)}px`)].filter(Boolean)
+    const columnsWidth = tracks.reduce((sum, width) => sum + parseInt(width, 10), 0)
+    return columnsWidth + ROW_GAP_PX * (tracks.length - 1) + ROW_PADDING_PX
+  }
+  /** Tabla con columnas a elección: lead (casilla, estado) y tail (acciones) no se eligen; el ⋮ va en el encabezado. */
+  function columnTable(tableId, rows, { lead, tail, rowClass = () => '', empty = '' } = {}) {
+    const table = TABLES[tableId]
+    const catalog = catalogOf(tableId)
+    const columns = visibleColumns(tableId)
+    const tailWidth = tail?.width || TAIL_WIDTH
+    const cols = gridColumns(tableId, lead?.width, tailWidth)
+    const headerCell = (id) => {
+      const column = catalog[id]
+      const sortable = table.sortable && column.sort
+      const on = sortable && state.sort?.key === column.sort
+      const arrow = on ? (state.sort.dir === 'asc' ? '▲' : '▼') : ''
+      const label = sortable ? `<button type="button" class="th-sort ${on ? 'on' : ''}" data-sort="${column.sort}" title="Ordenar por ${column.label.toLowerCase()}">${column.label}<span class="arrow">${arrow}</span></button>` : `<span class="ellipsis">${column.label}</span>`
+      return `<span class="col-th ${column.num ? 'num' : ''}">${label}<i class="col-grip" data-grip="${tableId}:${id}" title="Arrastra para cambiar el ancho · doble clic: el de fábrica"></i></span>`
+    }
+    const header = `<div class="tr th" style="--cols:${cols}">${lead ? lead.header : ''}${columns.map(headerCell).join('')}<span class="col-tail">${tail?.header || ''}<button class="icon-btn" type="button" data-cols="${tableId}" title="Columnas de esta tabla" aria-label="Columnas de ${table.title}">${ICON_MORE}</button></span></div>`
+    const rowHtml = (row) => `<div class="tr ${rowClass(row)}" style="--cols:${cols}"${row.id != null ? ` data-file="${row.id}"` : ''}>${lead ? lead.cell(row) : ''}${columns.map((id) => `<span class="col-td ${catalog[id].num ? 'num' : ''}">${catalog[id].cell(row)}</span>`).join('')}<span class="col-tail">${tail ? tail.cell(row) : ''}</span></div>`
+    return `<div class="table col-table" data-table="${tableId}" data-leadw="${lead?.width || ''}" data-tailw="${tailWidth}" style="--table-min:${tableMinWidth(tableId, lead?.width, tailWidth)}px">${header}${rows.length ? rows.map(rowHtml).join('') : empty}</div>`
+  }
+  function openColumnsPanel(tableId, button) {
+    $('.cols-panel', win)?.remove()
+    const table = TABLES[tableId]
+    const catalog = catalogOf(tableId)
+    const box = win.getBoundingClientRect()
+    const anchor = button.getBoundingClientRect()
+    const panel = document.createElement('div')
+    panel.className = 'ctx cols-panel'
+    panel.setAttribute('role', 'dialog')
+    panel.setAttribute('aria-label', `Columnas de ${table.title}`)
+    panel.style.top = `${anchor.bottom - box.top + 4}px`
+    panel.style.right = `${box.right - anchor.right}px`
+    const paint = () => {
+      const visible = visibleColumns(tableId)
+      panel.innerHTML = `<b class="cols-title">Columnas de ${table.title}</b>${table.columns.map((id) => `<label><input type="checkbox" data-colid="${id}" ${visible.includes(id) ? 'checked' : ''} ${catalog[id].always ? 'disabled' : ''}> ${catalog[id].label}${catalog[id].always ? ' <small>siempre visible</small>' : ''}</label>`).join('')}<div class="ctx-separator"></div><span class="hint">Se guarda al instante; se mantiene al reiniciar Purga.</span><button type="button" class="link-btn" data-colsreset>Volver a lo de fábrica</button>`
+      $$('[data-colid]', panel).forEach((check) => { check.onchange = () => {
+        const shown = visibleColumns(tableId)
+        layouts[tableId] = { ...layouts[tableId], visible: table.columns.filter((id) => id === check.dataset.colid ? check.checked : shown.includes(id)) }
+        saveLayouts()
+        renderView()
+      } })
+      $('[data-colsreset]', panel).onclick = () => { delete layouts[tableId]; saveLayouts(); renderView(); paint() }
+    }
+    paint()
+    panel.onclick = (event) => event.stopPropagation()
+    win.appendChild(panel)
+    const close = () => { panel.remove(); document.removeEventListener('click', close); document.removeEventListener('keydown', closeOnEscape) }
+    const closeOnEscape = (event) => event.key === 'Escape' && close()
+    setTimeout(() => { document.addEventListener('click', close); document.addEventListener('keydown', closeOnEscape) })
+  }
+  function startResize(grip, start) {
+    start.preventDefault()
+    start.stopPropagation()
+    const [tableId, columnId] = grip.dataset.grip.split(':')
+    const tableEl = grip.closest('[data-table]')
+    const minimum = catalogOf(tableId)[columnId].min
+    const startWidth = grip.parentElement.getBoundingClientRect().width
+    grip.classList.add('on')
+    const move = (event) => {
+      const width = Math.max(minimum, Math.round(startWidth + event.clientX - start.clientX))
+      layouts[tableId] = { ...layouts[tableId], widths: { ...layouts[tableId]?.widths, [columnId]: width } }
+      const cols = gridColumns(tableId, tableEl.dataset.leadw, tableEl.dataset.tailw)
+      $$('.tr', tableEl).forEach((row) => row.style.setProperty('--cols', cols))
+      tableEl.style.setProperty('--table-min', `${tableMinWidth(tableId, tableEl.dataset.leadw, tableEl.dataset.tailw)}px`)
+    }
+    const stop = () => { grip.classList.remove('on'); document.removeEventListener('mousemove', move); document.removeEventListener('mouseup', stop); saveLayouts() }
+    document.addEventListener('mousemove', move)
+    document.addEventListener('mouseup', stop)
+  }
+  function resetWidth(grip) {
+    const [tableId, columnId] = grip.dataset.grip.split(':')
+    if (layouts[tableId]?.widths) delete layouts[tableId].widths[columnId]
+    saveLayouts()
+    renderView()
+  }
+  /** Una fila suelta con las columnas de Explorar: la usa la lámina de Estados. */
+  function fileRow(file) {
+    const cols = gridColumns('explore', '28px', TAIL_WIDTH)
+    const cells = visibleColumns('explore').map((id) => `<span class="col-td ${FILE_COLUMNS[id].num ? 'num' : ''}">${FILE_COLUMNS[id].cell(file)}</span>`).join('')
+    return `<div class="tr ${exploreRowClass(file)}" style="--cols:${cols}" data-file="${file.id}">${exploreLead([file]).cell(file)}${cells}<span class="col-tail"></span></div>`
+  }
+  const exploreLead = (files, header) => ({ width: '28px', header: header ?? `<input type="checkbox" aria-label="Seleccionar todo" data-all ${state.selected.size && state.selected.size === files.length ? 'checked' : ''}>`, cell: (file) => `<input type="checkbox" aria-label="Seleccionar ${esc(file.name)}" data-check="${file.id}" ${state.selected.has(file.id) ? 'checked' : ''}>` })
+  const exploreRowClass = (file) => state.detail === file.id || state.selected.has(file.id) ? 'on' : ''
+
+  // ---------- propuesta (lámina 15): excluir subcarpetas por ruta, con clic derecho y desde «Editar» ----------
+  const rootOf = (file) => ROOTS.find((root) => file.dir.startsWith(root.name))
+  const relativeDir = (file) => { const root = rootOf(file); return root ? file.dir.slice(root.name.length + 1) : '' }
+  function isExcluded(file) {
+    const root = rootOf(file)
+    const relative = relativeDir(file)
+    return (state.rootExcludes[root?.name] || []).some((path) => relative === path || relative.startsWith(`${path}\\`))
+  }
+  /** Las subcarpetas entre la carpeta vigilada y el archivo: de la más general a la más particular. */
+  function ancestorsOf(file) {
+    const parts = relativeDir(file).split('\\').filter(Boolean)
+    return parts.map((_, index) => parts.slice(0, index + 1).join('\\'))
+  }
+  const FOLDER_LIKE = /[\\/]|\..*\.|\s|^\.?[^.]{12,}$/
+  /** Una «extensión» con barras, varios puntos (salvo .tar.gz), espacios o muy larga es, casi seguro, un nombre de carpeta. */
+  const looksLikeFolder = (text) => { const value = text.trim().replace(/^\./, ''); return value.length > 0 && value !== 'tar.gz' && FOLDER_LIKE.test(value) }
+  function addExclusion(root, path) {
+    const list = state.rootExcludes[root.name] || []
+    if (!list.includes(path)) state.rootExcludes[root.name] = [...list, path]
+  }
+  function excludeDialog(file) {
+    const root = rootOf(file)
+    const options = ancestorsOf(file)
+    if (!options.length) return MQ.toast(win, 'Este archivo está en la raíz de la carpeta vigilada: no hay subcarpeta que excluir.')
+    const affected = (path) => state.files.filter((item) => rootOf(item) === root && (relativeDir(item) === path || relativeDir(item).startsWith(`${path}\\`))).length
+    const dialog = MQ.dialog(win, { title: 'Excluir una subcarpeta', wide: true, body: `
+      <span>Purga deja de revisar la subcarpeta elegida de <b class="strong">${esc(root.name)}</b> y todo lo que tenga dentro.</span>
+      <div class="field">${options.map((path, index) => `<label class="row"><input type="radio" name="exclude" value="${esc(path)}" ${index === 0 ? 'checked' : ''}><span class="break-all">${esc(root.path)}\\<b class="strong">${esc(path)}</b></span></label>`).join('')}</div>
+      <div class="notice" style="margin:0" id="exclude-sim"></div>
+      <span class="hint">No se borra nada del disco. Lo que tiene marca, nota o etiqueta se conserva en el índice como archivo suelto.</span>`,
+      foot: '<button class="btn" type="button" data-close>Cancelar</button><button class="btn primary" type="button" data-ok>Excluir</button>' })
+    const chosen = () => $('input[name="exclude"]:checked', dialog.layer).value
+    const paintSim = () => { const count = affected(chosen()); $('#exclude-sim', dialog.layer).textContent = `Saldría${count === 1 ? '' : 'n'} del índice ${count} archivo${count === 1 ? '' : 's'} de ejemplo (en la app, el número real).` }
+    $$('input[name="exclude"]', dialog.layer).forEach((radio) => { radio.onchange = paintSim })
+    paintSim()
+    $('[data-close]', dialog.layer).onclick = dialog.close
+    $('[data-ok]', dialog.layer).onclick = () => { const path = chosen(); dialog.close(); addExclusion(root, path); renderView(); MQ.toast(win, `<span>Se excluyó ${esc(path)}</span><button class="btn small" type="button">Deshacer</button>`) }
+  }
+  function rootDialog(root) {
+    const paint = (layer) => {
+      const list = state.rootExcludes[root.name] || []
+      $('#excl-list', layer).innerHTML = list.length ? list.map((path) => `<div class="row" style="gap:8px"><span class="grow break-all">${esc(root.path)}\\<b class="strong">${esc(path)}</b></span><button class="icon-btn" type="button" title="Volver a incluir" aria-label="Volver a incluir ${esc(path)}" data-unexclude="${esc(path)}">×</button></div>`).join('') : '<span class="hint">Ninguna. Se revisa toda la carpeta.</span>'
+      $$('[data-unexclude]', layer).forEach((button) => { button.onclick = () => { state.rootExcludes[root.name] = list.filter((path) => path !== button.dataset.unexclude); paint(layer); renderView() } })
+    }
+    const dialog = MQ.dialog(win, { title: `Carpeta ${esc(root.name)}`, wide: true, body: `
+      <span class="muted break-all">${esc(root.path)}</span>
+      <div class="field"><span class="label accent">Extensiones</span><span class="hint">Filtran por cómo termina el nombre de cada archivo (.pdf, .tmp). Igual que hoy: hereda la global o tiene filtro propio.</span>
+        <div class="row"><input id="ext-new" placeholder="otra extensión, ej. dwg" style="width:240px"><button class="btn small" type="button" id="ext-add">Agregar</button></div>
+        <div id="ext-warn"></div></div>
+      <div class="field mq-proposed" style="padding:8px;border-radius:4px" title="Propuesta (lámina 15)"><span class="label accent">Subcarpetas excluidas</span>
+        <span class="hint">Purga no revisa estas subcarpetas ni lo que tengan dentro. Lo que ya estaba indexado sale del índice; lo que tenía marca, nota o etiqueta se conserva.</span>
+        <div id="excl-list" style="display:flex;flex-direction:column;gap:4px"></div>
+        <div class="row"><button class="btn small" type="button" id="excl-pick">Elegir subcarpeta…</button><span class="hint">o clic derecho sobre un archivo en Explorar → «Excluir carpeta…»</span></div>
+        <span class="label accent" style="margin-top:6px">Patrones de nombre</span>
+        <input value="node_modules, *.tmp" aria-label="Patrones de nombre"><span class="hint">Se omite cualquier archivo o carpeta con ese nombre, en cualquier nivel.</span></div>`,
+      foot: '<button class="btn primary" type="button" data-close>Cerrar</button>' })
+    paint(dialog.layer)
+    $('[data-close]', dialog.layer).onclick = dialog.close
+    $('#excl-pick', dialog.layer).onclick = () => { addExclusion(root, root.name === 'Descargas' ? 'sqldeveloper' : 'Archivo'); paint(dialog.layer); renderView() }
+    const warn = () => {
+      const text = $('#ext-new', dialog.layer).value
+      $('#ext-warn', dialog.layer).innerHTML = looksLikeFolder(text) ? `<div class="warn-box mq-proposed" title="Propuesta (lámina 15)">«${esc(text.trim())}» parece el nombre de una carpeta, no una extensión: las extensiones filtran por cómo termina el nombre de cada archivo. <button class="btn small" type="button" id="ext-as-folder" style="margin-top:6px">Excluir como subcarpeta</button></div>` : ''
+      const asFolder = $('#ext-as-folder', dialog.layer)
+      if (asFolder) asFolder.onclick = () => { addExclusion(root, text.trim().replace(/^\./, '')); $('#ext-new', dialog.layer).value = ''; warn(); paint(dialog.layer); renderView() }
+    }
+    $('#ext-new', dialog.layer).oninput = warn
+  }
+
+  // ---------- marco de la app ----------
+  const NAV = [['summary', 'Resumen'], ['explore', 'Explorar'], ['proposals', 'Propuestas'], ['scheduled', 'Programados'], ['duplicates', 'Duplicados'], ['photos', 'Fotos'], ['expiry', 'Vencimientos']]
+  const counts = () => ({ proposals: state.files.filter((file) => file.mark === 'none' && file.proposal).length, scheduled: state.files.filter((file) => file.mark === 'deleteOn').length, duplicates: 1, photos: PHOTO_GROUPS.length, expiry: state.files.filter((file) => file.expires && daysUntil(file.expires) <= 30).length })
+
+  // ---------- fotos: grupos de parecidas (hash perceptual) y días por ordenar ----------
+  const PHOTO_GROUPS = [
+    { title: 'Playa, 2 de agosto', photos: [
+      { name: 'IMG_20260802_101433.jpg', res: '4032 × 3024', px: 12.2, size: '3,8 MB', format: 'JPEG · calidad 95', exif: 'Pixel 8 · 02/08/2026 10:14', sharp: 'alta', soft: false },
+      { name: 'WhatsApp Image 2026-08-02 at 10.14.33.jpeg', res: '1600 × 1200', px: 1.9, size: '210 KB', format: 'JPEG · calidad 70', exif: 'sin EXIF', sharp: 'media', soft: true },
+      { name: 'IMG_20260802_101433 (1).jpg', res: '2016 × 1512', px: 3.0, size: '1,1 MB', format: 'JPEG · calidad 85', exif: 'Pixel 8 · 02/08/2026 10:14', sharp: 'alta', soft: false } ] },
+    { title: 'Cumpleaños, ráfaga', photos: [
+      { name: 'IMG_20260915_203011.heic', res: '4032 × 3024', px: 12.2, size: '2,4 MB', format: 'HEIC', exif: 'iPhone 15 · 15/09/2026 20:30', sharp: 'alta', soft: false },
+      { name: 'IMG_20260915_203012.heic', res: '4032 × 3024', px: 12.2, size: '2,3 MB', format: 'HEIC', exif: 'iPhone 15 · 15/09/2026 20:30', sharp: 'baja (movida)', soft: true } ] },
+  ]
+  const PHOTO_DAYS = [
+    { day: '2026-08-02', count: 34, source: 'EXIF', confidence: 'ok' },
+    { day: '2026-08-03', count: 12, source: 'EXIF', confidence: 'ok' },
+    { day: '2026-09-15', count: 58, source: 'EXIF', confidence: 'ok' },
+    { day: '2026-10-01', count: 9, source: 'nombre del archivo', confidence: 'ok' },
+    { day: '2026-10-20', count: 4, source: 'fecha de modificación', confidence: 'low' },
+  ]
+  const DEST_BASE = 'C:\\Users\\…\\Pictures\\Purga'
+  const destinationFor = (day) => `${DEST_BASE}\\${day.slice(0, 4)}\\${day}`
+  function shell() {
+    const empty = state.scenario === 'first'
+    const count = counts()
+    const status = state.scenario === 'scanning'
+      ? '<span class="spinner-dot dot tone-warn"></span>Revisando Descargas…'
+      : empty ? '<span class="dot tone-off"></span>Sin carpetas vigiladas' : '<span class="dot tone-ok"></span>Al día · 2 carpetas vigiladas'
+    win.innerHTML = `<div class="app">
+      <div class="topbar"><span class="brand"><span class="logo mq-logo"></span>Purga</span><div class="menubar" id="menubar"></div><span class="topbar-status">${status}</span></div>
+      <div class="toolbar"><input class="search" id="search" placeholder="Buscar por nombre, nota o etiqueta…" ${empty ? 'disabled' : ''}><button class="btn ${state.view === 'search' ? 'on' : ''}" type="button" data-view="search" ${empty ? 'disabled' : ''}>Filtros</button><button class="btn primary" type="button" data-cmd="addRoot">+ Agregar carpeta</button><button class="btn" type="button" data-cmd="scan" ${empty ? 'disabled' : ''}>Escanear ahora</button></div>
+      <div class="body">
+        <nav class="nav" aria-label="Vistas">
+          <span class="section-label">Vistas</span>
+          ${NAV.map(([id, label]) => `<button type="button" class="nav-item ${state.view === id ? 'on' : ''}" data-view="${id}">${label}${!empty && count[id] ? `<span class="count">${count[id]}</span>` : ''}</button>`).join('')}
+          <div class="nav-divider"></div>
+          <span class="section-label">Búsquedas guardadas</span>
+          ${empty ? '' : SAVED_SEARCHES.map((saved, index) => `<button type="button" class="nav-item ${state.view === 'search' && state.savedIndex === index ? 'on' : ''}" data-saved="${index}">${esc(saved.name)}</button>`).join('')}
+          <div class="nav-divider"></div>
+          <span class="section-label">Carpetas vigiladas</span>
+          ${empty ? '<span class="hint" style="padding:0 14px">Ninguna todavía</span>' : ROOTS.map((root) => `<button type="button" class="nav-item ${state.view === 'explore' && state.folder === root.name ? 'on' : ''}" data-folder="${root.name}">${root.name}<span class="count">${root.files}</span></button>`).join('')}
+          <div class="nav-divider"></div>
+          <button type="button" class="nav-item ${state.view === 'settings' ? 'on' : ''}" data-view="settings">Configuración</button>
+        </nav>
+        <section class="list" id="view"></section>
+        <aside class="detail" id="detail"></aside>
+      </div>
+      <div class="statusbar">${statusbar()}</div>
+    </div>`
+    MQ.menubar($('#menubar', win), MENUS)
+    $$('[data-view]', win).forEach((button) => { button.onclick = () => go(button.dataset.view) })
+    $$('[data-folder]', win).forEach((button) => {
+      button.onclick = () => { state.folder = button.dataset.folder; go('explore') }
+      button.oncontextmenu = (event) => {
+        event.preventDefault()
+        const root = ROOTS.find((item) => item.name === button.dataset.folder)
+        openMenu({ x: event.clientX, y: event.clientY }, [{ label: 'Abrir carpeta', action: () => MQ.toast(win, `Se abre ${esc(root.path)} en el Explorador`) }, null, { label: 'Dejar de vigilar', hint: 'no se borra nada del disco', action: () => confirmUnwatch(root) }])
+      }
+    })
+    $$('[data-saved]', win).forEach((button) => { button.onclick = () => { state.savedIndex = Number(button.dataset.saved); state.filters = { text: '', origin: '', days: 0, mark: '', tag: '', ...SAVED_SEARCHES[state.savedIndex].filters }; go('search') } })
+    const search = $('#search', win)
+    if (search) search.onkeydown = (event) => { if (event.key === 'Enter') { state.filters.text = search.value; state.savedIndex = null; go('search') } }
+    $$('[data-cmd]', win).forEach((button) => { button.onclick = () => COMMANDS[button.dataset.cmd]() })
+    renderView()
+  }
+  function statusbar() {
+    if (state.scenario === 'first') return '<span>Agrega una carpeta para empezar</span>'
+    const scheduled = state.files.filter((file) => file.mark === 'deleteOn')
+    const scan = state.scenario === 'scanning'
+      ? '<span class="row" style="gap:8px">Revisando Descargas <span class="progress"><i style="width:42%"></i></span> 8.112 / 19.300</span>'
+      : '<span>Última revisión hace 2 min</span>'
+    return `${scan}<span>Duplicados: 3 por confirmar</span><span class="statusbar-right">${scheduled.length} eliminaciones programadas · 412 MB</span>`
+  }
+  const go = (view) => { state.view = view; shell() }
+
+  // ---------- vistas ----------
+  const VIEWS = {
+    summary() {
+      if (state.scenario === 'first') return emptyFirstUse()
+      return `<div class="list-head"><span class="list-title">Resumen</span><span class="list-sub">Lo que se puede liberar y lo que vence</span></div>
+      <div class="stats"><div class="stat accent"><b>48.212</b><span>archivos indexados</span></div><div class="stat accent"><b>6,4 GB</b><span>recuperables</span></div><div class="stat"><b>${counts().proposals}</b><span>propuestas por revisar</span></div><div class="stat"><b>${counts().expiry}</b><span>vencen en 30 días</span></div></div>
+      <div class="two-blocks">
+        <div class="block"><h4>Espacio por origen</h4>${[['Navegador', 46, '29 GB'], ['WhatsApp', 22, '14 GB'], ['Correo', 9, '5,8 GB'], ['Local', 23, '15 GB']].map(([origin, share, size]) => `<div class="meter"><span>${origin}</span><span class="progress"><i style="width:${share}%"></i></span><span class="muted" style="text-align:right">${size}</span></div>`).join('')}</div>
+        <div class="block"><h4>Más espacio sin abrir (más de 180 días)</h4>${[['Downloads', 'C:\\Users\\…\\OneDrive - Empresa', '3,1 GB'], ['WhatsApp', 'C:\\Users\\…\\Downloads', '1,2 GB'], ['Fotos 2022', 'C:\\Users\\…\\Documents', '880 MB']].map(([name, parent, size]) => `<div class="file-row">${fileLine(name, parent)}<span class="size">${size}</span><span class="row-acts"><button class="icon-btn" type="button" title="Abrir carpeta" aria-label="Abrir carpeta">${ICON_FOLDER}</button></span></div>`).join('')}</div>
+      </div>
+      <div class="list-head" style="padding-top:4px"><span class="list-title" style="font-size:13px">Próximas eliminaciones</span></div>
+      ${scheduledRows()}`
+    },
+    explore() {
+      if (state.scenario === 'first') return emptyFirstUse()
+      const root = ROOTS.find((item) => item.name === state.folder) || ROOTS[0]
+      const files = state.files.filter((file) => file.dir.startsWith(root.name) && !isExcluded(file))
+      const selection = state.selected.size
+      return `<div class="list-head"><span class="list-title">${root.name}</span><span class="crumbs">${esc(root.path)}</span>
+        <span class="list-actions"><span class="hint">Marca de la carpeta: <b class="strong">${esc(root.rule)}</b></span><button class="btn small" type="button" data-cmd="folderRule">Cambiar</button></span></div>
+      ${selection ? selectionBar() : '<div class="notice">Marca varios archivos a la vez con las casillas. Lo que no marques queda «Sin revisar».</div>'}
+      ${columnTable('explore', sortFiles(files), { lead: exploreLead(files), rowClass: exploreRowClass })}`
+    },
+    proposals() {
+      const list = state.files.filter((file) => file.mark === 'none' && file.proposal)
+      if (!list.length) return emptyState('Nada por revisar', 'Las reglas no encontraron archivos nuevos que proponer.')
+      return `<div class="list-head"><span class="list-title">Propuestas</span><span class="list-sub">Ninguna se aplica sola</span><span class="list-actions"><button class="btn small" type="button" data-cmd="acceptAll">Todas a la Papelera</button></span></div>
+      <div class="notice">«Dejarlo» hace que la misma regla no lo vuelva a proponer hasta que el archivo cambie. Nada se borra sin pasar por la Papelera.</div>
+      ${columnTable('proposals', list, { tail: { width: '150px', cell: (file) => `<button class="btn small danger" type="button" data-accept="${file.id}">A la Papelera</button><button class="icon-btn" type="button" title="Más opciones" aria-label="Más opciones" data-more="${file.id}">${ICON_MORE}</button>` }, rowClass: (file) => state.detail === file.id ? 'on' : '' })}`
+    },
+    scheduled() {
+      return `<div class="list-head"><span class="list-title">Programados</span><span class="list-sub">Se ejecutan solos en su fecha, con aviso el día anterior</span></div>${scheduledRows(true)}`
+    },
+    duplicates() {
+      return `<div class="list-head"><span class="list-title">Duplicados</span><span class="list-sub">Mismo contenido, comprobado por hash completo</span></div>
+      <div class="block"><h4>factura_octubre.pdf · 2 copias · 96 KB recuperables</h4>
+        ${columnTable('duplicates', [{ ...byId(8), keep: true }, { ...byId(7), keep: false }], { lead: { width: '110px', header: '<span>Estado</span>', cell: (file) => file.keep ? '<span class="badge ok">Conservar</span>' : '<span class="badge new">Propuesta</span>' } })}
+        <div class="row"><button class="btn small primary" type="button" data-accept="7">Eliminar 1 copia</button><button class="btn small" type="button" data-reject="7">No son duplicados útiles</button></div></div>
+      <div class="block"><h4>2 grupos más en cálculo</h4><span class="hint">Se muestran cuando el hash completo los confirma. Los bloqueos de Office («~$…») no cuentan como duplicados: los propone «Archivos temporales».</span></div>`
+    },
+    search() {
+      const filters = state.filters
+      const allTags = [...new Set(state.files.flatMap((file) => file.tags))].sort()
+      const results = state.files.filter((file) => {
+        const text = filters.text.toLowerCase()
+        const matchesText = !text || file.name.toLowerCase().includes(text) || (file.note || '').toLowerCase().includes(text) || file.tags.some((tag) => tag.includes(text))
+        const idleDays = file.opened ?? file.modified
+        return matchesText && (!filters.origin || file.origin === filters.origin) && idleDays > filters.days && (!filters.mark || file.mark === filters.mark) && (!filters.tag || file.tags.includes(filters.tag))
+      })
+      const select = (key, label, options) => `<label class="field" style="gap:4px"><span class="label">${label}</span><select data-filter="${key}">${options.map(([value, text]) => `<option value="${value}" ${String(filters[key]) === String(value) ? 'selected' : ''}>${text}</option>`).join('')}</select></label>`
+      return `<div class="list-head"><span class="list-title">${state.savedIndex != null ? esc(SAVED_SEARCHES[state.savedIndex].name) : 'Búsqueda'}</span><span class="list-sub">${results.length} archivos</span><span class="list-actions"><button class="btn small" type="button" data-cmd="saveSearch">Guardar búsqueda</button></span></div>
+      <div class="block" style="flex-direction:row;flex-wrap:wrap;align-items:end;gap:10px">
+        <label class="field" style="gap:4px;flex:1 1 200px"><span class="label">Texto</span><input data-filter="text" value="${esc(filters.text)}" placeholder="nombre, nota o etiqueta"></label>
+        ${select('origin', 'Origen', [['', 'Cualquiera'], ['Navegador', 'Navegador'], ['WhatsApp', 'WhatsApp'], ['Correo', 'Correo'], ['Captura', 'Captura'], ['Local', 'Local']])}
+        ${select('days', 'Sin abrir más de', [[0, '—'], [30, '30 días'], [60, '60 días'], [180, '180 días'], [365, '1 año']])}
+        ${select('mark', 'Marca', [['', 'Cualquiera'], ...Object.entries(MARKS).map(([id, mark]) => [id, mark.label])])}
+        ${select('tag', 'Etiqueta', [['', 'Cualquiera'], ...allTags.map((tag) => [tag, tag])])}
+      </div>
+      ${state.selected.size ? selectionBar() : ''}
+      ${columnTable('search', sortFiles(results), { lead: exploreLead(results, '<span></span>'), rowClass: exploreRowClass, empty: '<div class="empty"><b>Ningún archivo cumple todos los filtros</b><span>Quita uno para ampliar la búsqueda.</span></div>' })}`
+    },
+    rules() {
+      const sentence = (rule) => { const [before, after] = rule.sentence.split('{days}'); return after === undefined ? esc(before) : `${esc(before)}<input type="number" value="${rule.days}" aria-label="Umbral en días">${esc(after)}` }
+      const info = (rule) => `<div class="rule-side"><dl><dt>Qué revisa</dt><dd>${esc(rule.what)}</dd><dt>Ejemplo</dt><dd>${esc(rule.example)}</dd><dt>Nunca toca</dt><dd>Lo marcado Conservar o Archivado, lo que tiene un vencimiento por delante y lo que dejaste antes si no cambió.</dd><dt>Detalle técnico</dt><dd>${esc(rule.tech)}</dd><dt>Hoy propone</dt><dd>${esc(rule.sim)}</dd></dl></div>`
+      const form = `<div class="rule-side"><div class="rule-form">
+          <label>Nombre</label><input value="Videos de capacitación vistos">
+          <label>Dónde</label><span class="grow-row"><select><option>En la carpeta…</option><option>Con origen…</option><option>En todas las carpetas vigiladas</option></select><input value="C:\\Users\\…\\OneDrive\\Capacitación" readonly><button class="btn small" type="button">Elegir…</button></span>
+          <label>Tipo de archivo</label><input value=".mp4, .mov">
+          <label>El nombre contiene</label><input placeholder="opcional">
+          <label>Sin abrir hace más de</label><span class="grow-row"><input type="number" value="90"> días</span>
+          <label>Más grande que</label><span class="grow-row"><input type="number" value="50"> MB</span>
+        </div><div class="notice" style="margin:0">Se cumplen todas las condiciones que llenes. Solo propone; nunca borra.</div>
+        <div class="row" style="gap:8px"><span class="grow muted" data-sim="form"></span><button class="btn small" type="button" data-cmd="ruleFormClose">Cancelar</button><button class="btn small" type="button" data-simform>Simular</button><button class="btn small primary" type="button" data-cmd="ruleFormSave">Guardar regla</button></div></div>`
+      return `<div class="view-scroll"><div class="list-head"><span class="list-title">Reglas</span><span class="list-sub">Solo proponen; ninguna borra</span><span class="list-actions"><button class="btn small primary" type="button" data-cmd="ruleFormOpen">Nueva regla</button></span></div>
+      ${state.ruleForm ? form : ''}
+      <div class="table" style="flex:none">${RULES.map((rule, index) => `<div class="tr static cols-rules"><input type="checkbox" checked aria-label="${esc(rule.name)}"><span class="rule-text"><b>${esc(rule.name)}</b><p>${sentence(rule)}</p><span class="muted" data-sim="${index}"></span></span><span class="row" style="gap:6px"><button class="icon-btn ${state.ruleInfo === index ? 'on' : ''}" type="button" title="Qué hace" aria-label="Qué hace" data-ruleinfo="${index}">${ICON_INFO}</button><button class="btn small" type="button" data-simulate="${index}">Simular</button></span></div>${state.ruleInfo === index ? info(rule) : ''}`).join('')}
+      ${CUSTOM_RULES.map((rule) => `<div class="tr static cols-rules"><input type="checkbox" checked aria-label="${esc(rule.name)}"><span class="rule-text"><b>${esc(rule.name)} <span class="badge new">propia</span></b><p>${esc(rule.text)}</p></span><span><button class="btn small" type="button" data-cmd="ruleFormOpen">Editar</button></span></div>`).join('')}</div>
+      <div class="notice">Ninguna regla toca lo marcado Conservar o Archivado, ni lo que tiene un vencimiento por delante.</div></div>`
+    },
+    photos() {
+      const tabs = `<div class="tabs"><button type="button" class="${state.photoTab === 'similar' ? 'on' : ''}" data-phototab="similar">Parecidas</button><button type="button" class="${state.photoTab === 'bydate' ? 'on' : ''}" data-phototab="bydate">Por fecha</button></div>`
+      if (state.photoTab === 'bydate') {
+        const selected = PHOTO_DAYS.filter((item) => state.photoDays.has(item.day))
+        return `<div class="list-head"><span class="list-title">Fotos · por fecha</span><span class="list-sub">Descargas · 117 fotos sin ordenar</span><span class="list-actions"><button class="btn small" type="button" data-cmd="photoRule">Ordenar esta carpeta automáticamente…</button></span></div>${tabs}
+        ${selected.length ? `<div class="selbar"><b>${selected.length} días · ${selected.reduce((sum, item) => sum + item.count, 0)} fotos</b><button class="btn small primary" type="button" data-organize="move">Mover…</button><button class="btn small" type="button" data-organize="copy">Copiar…</button></div>` : '<div class="notice">Elige uno o varios días y muévelos o cópialos a su carpeta.</div>'}
+        <div class="table"><div class="tr th cols-dates"><span></span><span>Día</span><span class="num">Fotos</span><span>Destino</span><span>Fecha tomada de</span></div>
+        ${PHOTO_DAYS.map((item) => `<div class="tr cols-dates ${state.photoDays.has(item.day) ? 'on' : ''}"><input type="checkbox" data-photoday="${item.day}" ${state.photoDays.has(item.day) ? 'checked' : ''} aria-label="${item.day}"><span class="mono">${formatDate(item.day)}</span><span class="num">${item.count}</span><span class="mono ellipsis">${esc(destinationFor(item.day))}</span><span>${item.confidence === 'low' ? `<span class="badge warn">${item.source} · confirmar</span>` : `<span class="badge ok">${item.source}</span>`}</span></div>`).join('')}</div>`
+      }
+      return `<div class="list-head"><span class="list-title">Fotos · parecidas</span><span class="list-sub">La de mejor calidad se propone para conservar</span></div>${tabs}
+      ${PHOTO_GROUPS.map((group, groupIndex) => { const best = bestPhoto(group); return `<div class="block"><div class="row"><h4 class="grow">${esc(group.title)} · ${group.photos.length} fotos</h4><button class="btn small primary" type="button" data-keepbest="${groupIndex}">Conservar la mejor y eliminar el resto</button></div>
+        <div class="photo-group">${group.photos.map((photo, photoIndex) => `<div class="photo ${photoIndex === best ? 'best' : ''}" data-pickbest="${groupIndex}:${photoIndex}"><div class="thumb ${photo.soft ? 'soft' : ''}"><span>${photo.res}</span></div><div class="meta"><b title="${esc(photo.name)}">${esc(photo.name)}</b><span>${photo.format} · ${photo.size}</span><span class="muted">${esc(photo.exif)} · nitidez ${photo.sharp}</span>${photoIndex === best ? '<span><span class="badge ok">Mejor calidad · conservar</span></span>' : '<span><span class="badge new">Propuesta: eliminar</span></span>'}</div></div>`).join('')}</div>
+        <span class="hint">Clic en otra foto para preferirla. Criterio: más píxeles, menos compresión, EXIF original, más nítida.</span></div>` }).join('')}`
+    },
+    expiry() {
+      const list = state.files.filter((file) => file.expires).sort((a, b) => a.expires.localeCompare(b.expires))
+      return `<div class="list-head"><span class="list-title">Vencimientos</span><span class="list-sub">Avisos 60 · 30 · 7 · 1 días antes</span></div>
+      ${columnTable('expiry', list, { rowClass: (file) => `${expiryTone(file)} ${state.detail === file.id ? 'on' : ''}` })}`
+    },
+    settings() {
+      return `<div class="list-head"><span class="list-title">Configuración</span><span class="list-sub">Se guarda en %APPDATA%\\Purga\\</span></div>
+      <div class="block"><h4>Carpetas vigiladas</h4>
+        ${columnTable('folders', ROOTS.map((root, index) => ({ ...root, index })), { tail: { width: '190px', cell: (root) => `<button class="btn small" type="button" title="Extensiones y subcarpetas excluidas de esta carpeta" data-editroot="${root.index}">Editar</button><button class="btn small danger" type="button" data-unwatch="${root.index}">Dejar de vigilar</button>` }, rowClass: () => 'static' })}</div>
+      <div class="block"><h4>Extensiones · regla global</h4>
+        <div class="segmented"><button type="button" class="${state.extMode === 'deny' ? 'on' : ''}" data-extmode="deny">Todas menos las marcadas</button><button type="button" class="${state.extMode === 'allow' ? 'on' : ''}" data-extmode="allow">Solo las marcadas</button></div>
+        ${Object.entries(EXT_GROUPS).map(([group, list]) => `<div class="row"><span class="muted" style="width:96px">${group}</span><div class="chips">${list.map((ext) => `<button type="button" class="chip ${state.excluded.has(ext) ? 'on' : ''}" data-ext="${ext}">.${ext}</button>`).join('')}</div></div>`).join('')}
+        <div class="row"><input id="newExt" placeholder="otra extensión, ej. dwg" style="width:220px"><button class="btn small" type="button" data-cmd="addExt">Agregar</button><span class="grow"></span><button class="btn primary small" type="button" data-cmd="saveExt">Guardar</button></div>
+        <span class="hint">Marcadas = ${state.extMode === 'deny' ? 'se omiten' : 'son las únicas que se indexan'}.</span></div>
+      <div class="block"><h4>General</h4>
+        <div class="row"><span style="width:150px">Idioma</span><div class="segmented">${[['system', 'Sistema'], ['es', 'Español'], ['en', 'English']].map(([id, label]) => `<button type="button" class="${state.language === id ? 'on' : ''}" data-lang="${id}">${label}</button>`).join('')}</div></div>
+        <div class="row"><span style="width:150px">Tema</span><div class="segmented">${[['system', 'Sistema'], ['light', 'Claro'], ['dark', 'Oscuro']].map(([id, label]) => `<button type="button" class="${($('.mq-theme button.on')?.dataset.themeChoice || 'system') === id ? 'on' : ''}" data-theme-set="${id}">${label}</button>`).join('')}</div></div>
+        <label class="row"><input type="checkbox" ${state.tray ? 'checked' : ''} data-toggle="tray"><span>Quedar en la bandeja al cerrar la ventana</span></label>
+        <label class="row"><input type="checkbox" ${state.startup ? 'checked' : ''} data-toggle="startup"><span>Iniciar con Windows</span></label>
+      </div>`
+    },
+  }
+  function selectionBar() {
+    return `<div class="selbar"><b>${state.selected.size} seleccionados</b><button class="btn small" type="button" data-cmd="previewSelection" title="Espacio">Vista previa</button><button class="btn small" type="button" data-mark="keep">Conservar</button><button class="btn small" type="button" data-mark="delete">Eliminar</button><button class="btn small" type="button" data-mark="deleteOn">Eliminar el…</button><button class="btn small" type="button" data-mark="reviewOn">Revisar el…</button><button class="btn small" type="button" data-cmd="tagSelection">Etiquetar…</button><button class="btn small" type="button" data-mark="none">Quitar marca</button><span class="grow"></span><button class="btn small" type="button" data-cmd="clearSel">Cancelar</button></div>`
+  }
+  const tagChips = (tags) => tags.map((tag) => `<span class="badge">#${esc(tag)}</span>`).join('')
+  function scheduledRows(withUndo) {
+    const list = state.files.filter((file) => file.mark === 'deleteOn')
+    if (!list.length) return '<div class="empty"><b>Nada programado</b><span>Marca un archivo con «Eliminar el…» para programarlo.</span></div>'
+    return columnTable('scheduled', list, { tail: withUndo ? { width: '120px', cell: (file) => `<button class="btn small" type="button" data-unschedule="${file.id}">Quitar</button>` } : null, rowClass: (file) => state.detail === file.id ? 'on' : '' })
+  }
+  const emptyState = (title, text, action = '') => `<div class="empty"><span class="empty-logo mq-logo"></span><b>${title}</b><span>${text}</span>${action}</div>`
+  const emptyFirstUse = () => emptyState('Todavía no hay carpetas vigiladas', 'Elige una carpeta, por ejemplo Descargas o Documentos. Purga la revisa por detrás y puedes usarla mientras tanto.', '<button class="btn primary big" type="button" data-cmd="addRoot">Agregar carpeta</button>')
+
+  function renderView() {
+    const view = $('#view', win)
+    view.innerHTML = VIEWS[state.view]()
+    renderDetail()
+    $$('[data-cmd]', view).forEach((button) => { button.onclick = () => COMMANDS[button.dataset.cmd]() })
+    $$('[data-sort]', view).forEach((button) => { button.onclick = () => toggleSort(button.dataset.sort) })
+    $$('[data-cols]', view).forEach((button) => { button.onclick = (event) => { event.stopPropagation(); openColumnsPanel(button.dataset.cols, button) } })
+    $$('[data-grip]', view).forEach((grip) => { grip.onmousedown = (event) => startResize(grip, event); grip.ondblclick = () => resetWidth(grip); grip.onclick = (event) => event.stopPropagation() })
+    $$('[data-file]', view).forEach((row) => { row.onclick = (event) => { if (event.target.closest('button, input')) return; state.detail = Number(row.dataset.file); renderView() } })
+    $$('[data-file]', view).forEach((row) => { row.oncontextmenu = (event) => {
+      const file = byId(row.dataset.file)
+      if (!file || !rootOf(file)) return
+      event.preventDefault()
+      openMenu({ x: event.clientX, y: event.clientY }, [
+        { label: 'Vista previa', action: () => previewDialog([file.id]) },
+        { label: 'Mostrar en carpeta', action: () => MQ.toast(win, `Se muestra ${esc(file.name)} en el Explorador`) },
+        null,
+        { label: 'Excluir carpeta…', hint: 'propuesta · deja de revisar una subcarpeta', action: () => excludeDialog(file) },
+      ])
+    } })
+    $$('[data-editroot]', view).forEach((button) => { button.onclick = () => rootDialog(ROOTS[Number(button.dataset.editroot)]) })
+    $$('[data-check]', view).forEach((box) => { box.onchange = () => { const id = Number(box.dataset.check); box.checked ? state.selected.add(id) : state.selected.delete(id); renderView() } })
+    $('[data-all]', view)?.addEventListener('change', (event) => { const ids = state.files.filter((file) => file.dir.startsWith(state.folder)).map((file) => file.id); state.selected = new Set(event.target.checked ? ids : []); renderView() })
+    $$('[data-mark]', view).forEach((button) => { button.onclick = () => applyMark([...state.selected], button.dataset.mark) })
+    $$('[data-accept]', view).forEach((button) => { button.onclick = () => applyMark([Number(button.dataset.accept)], 'delete') })
+    $$('[data-reject]', view).forEach((button) => { button.onclick = () => { const file = byId(button.dataset.reject); delete file.proposal; MQ.toast(win, `Propuesta rechazada: ${esc(file.name)}`); shell() } })
+    $$('[data-unschedule]', view).forEach((button) => { button.onclick = () => { const file = byId(button.dataset.unschedule); file.mark = 'none'; delete file.due; shell() } })
+    $$('[data-ext]', view).forEach((chip) => { chip.onclick = () => { const ext = chip.dataset.ext; state.excluded.has(ext) ? state.excluded.delete(ext) : state.excluded.add(ext); renderView() } })
+    $$('[data-extmode]', view).forEach((button) => { button.onclick = () => { state.extMode = button.dataset.extmode; renderView() } })
+    $$('[data-lang]', view).forEach((button) => { button.onclick = () => { state.language = button.dataset.lang; renderView() } })
+    $$('[data-theme-set]', view).forEach((button) => { button.onclick = () => { MQ.applyTheme(button.dataset.themeSet); renderView() } })
+    $$('[data-toggle]', view).forEach((box) => { box.onchange = () => { state[box.dataset.toggle] = box.checked } })
+    $$('[data-phototab]', view).forEach((button) => { button.onclick = () => { state.photoTab = button.dataset.phototab; renderView() } })
+    $$('[data-photoday]', view).forEach((box) => { box.onchange = () => { box.checked ? state.photoDays.add(box.dataset.photoday) : state.photoDays.delete(box.dataset.photoday); renderView() } })
+    $$('[data-organize]', view).forEach((button) => { button.onclick = () => organizeDialog(button.dataset.organize) })
+    $$('[data-pickbest]', view).forEach((card) => { card.onclick = () => { const [groupIndex, photoIndex] = card.dataset.pickbest.split(':').map(Number); PHOTO_GROUPS[groupIndex].chosen = photoIndex; renderView() } })
+    $$('[data-keepbest]', view).forEach((button) => { button.onclick = () => keepBest(Number(button.dataset.keepbest)) })
+    $$('[data-filter]', view).forEach((control) => { control.onchange = () => { const key = control.dataset.filter; state.filters[key] = key === 'days' ? Number(control.value) : control.value; state.savedIndex = null; renderView() } })
+    $$('[data-simulate]', view).forEach((button) => { button.onclick = () => { $(`[data-sim="${button.dataset.simulate}"]`, view).textContent = `propondría ${RULES[button.dataset.simulate].sim}` } })
+    $$('[data-ruleinfo]', view).forEach((button) => { button.onclick = () => { const index = Number(button.dataset.ruleinfo); state.ruleInfo = state.ruleInfo === index ? null : index; renderView() } })
+    $('[data-simform]', view)?.addEventListener('click', () => { $('[data-sim="form"]', view).textContent = 'propondría 12 archivos · 2,1 GB' })
+    $$('[data-open]', view).forEach((button) => { button.onclick = () => MQ.toast(win, `Se abre ${esc(byId(button.dataset.open).name)} con su programa de Windows`) })
+    $$('[data-reveal]', view).forEach((button) => { button.onclick = () => MQ.toast(win, `Se muestra ${esc(byId(button.dataset.reveal).name)} en el Explorador`) })
+    $$('[data-unwatch]', view).forEach((button) => { button.onclick = () => confirmUnwatch(ROOTS[Number(button.dataset.unwatch)]) })
+    $$('[data-more]', view).forEach((button) => { button.onclick = (event) => {
+      event.stopPropagation()
+      const file = byId(button.dataset.more)
+      const box = button.getBoundingClientRect()
+      openMenu({ x: box.right, y: box.bottom + 4 }, [
+        { label: 'Vista previa', action: () => previewDialog([file.id]) },
+        null,
+        { label: 'Dejarlo', hint: 'no se vuelve a proponer hasta que cambie', action: () => { delete file.proposal; MQ.toast(win, `Se deja: ${esc(file.name)}`); shell() } },
+        { label: 'Conservar siempre', hint: 'ninguna regla lo vuelve a tocar', action: () => applyMark([file.id], 'keep') },
+        { label: 'Eliminar el…', action: () => applyMark([file.id], 'deleteOn') },
+        { label: 'Revisar el…', action: () => applyMark([file.id], 'reviewOn') },
+      ], true)
+    } })
+  }
+
+  // la mejor: la elegida a mano, o la de más píxeles; a igualdad, la más nítida (el orden del criterio)
+  function bestPhoto(group) {
+    if (group.chosen != null) return group.chosen
+    let bestIndex = 0
+    group.photos.forEach((photo, index) => {
+      const current = group.photos[bestIndex]
+      const morePixels = photo.px > current.px
+      const sameAndSharper = photo.px === current.px && !photo.soft && current.soft
+      if (morePixels || sameAndSharper) bestIndex = index
+    })
+    return bestIndex
+  }
+  function keepBest(groupIndex) {
+    const group = PHOTO_GROUPS[groupIndex]
+    const others = group.photos.length - 1
+    const dialog = MQ.dialog(win, { title: 'Conservar la mejor', body: `<span>Se conserva <b class="strong">${esc(group.photos[bestPhoto(group)].name)}</b>. Las otras ${others} van a la Papelera de reciclaje.</span>`, foot: '<button class="btn" type="button" data-close>Cancelar</button><button class="btn danger-solid" type="button" data-ok>Enviar a la Papelera</button>' })
+    $('[data-close]', dialog.layer).onclick = dialog.close
+    $('[data-ok]', dialog.layer).onclick = () => { dialog.close(); PHOTO_GROUPS.splice(groupIndex, 1); shell(); MQ.toast(win, `<span>${others} fotos en la Papelera</span><button class="btn small" type="button">Deshacer</button>`) }
+  }
+  function organizeDialog(mode) {
+    const days = PHOTO_DAYS.filter((item) => state.photoDays.has(item.day))
+    const photos = days.reduce((sum, item) => sum + item.count, 0)
+    const lowConfidence = days.filter((item) => item.confidence === 'low')
+    const verb = mode === 'move' ? 'Mover' : 'Copiar'
+    const dialog = MQ.dialog(win, { title: `${verb} ${photos} fotos por fecha`, wide: true, body: `
+      <div class="field"><span class="label accent">Carpeta de destino</span><div class="row"><input value="${esc(DEST_BASE)}" class="grow mono"><button class="btn" type="button">Elegir…</button></div></div>
+      <div class="field"><span class="label accent">Una carpeta por</span><div class="segmented"><button type="button">Año</button><button type="button">Mes</button><button type="button" class="on">Día</button></div><span class="hint mono">${esc(destinationFor(days[0]?.day || '2026-08-02'))}</span></div>
+      <div class="segmented"><button type="button" class="${mode === 'move' ? 'on' : ''}">Mover</button><button type="button" class="${mode === 'copy' ? 'on' : ''}">Copiar</button></div>
+      ${mode === 'copy' ? '<div class="warn-box">Copiar ocupa 312 MB más. Los duplicados exactos que ya estén en el destino no se copian.</div>' : '<span class="hint">Mover en el mismo disco conserva las marcas de cada foto. Si un nombre ya existe en el destino, se agrega « (1)».</span>'}
+      ${lowConfidence.length ? `<div class="warn-box">${lowConfidence.map((item) => item.count).reduce((a, b) => a + b, 0)} fotos no tienen fecha de captura: su fecha sale de la modificación. Revísalas antes.</div>` : ''}`,
+      foot: `<button class="btn" type="button" data-close>Cancelar</button><button class="btn primary" type="button" data-ok>${verb} a ${days.length} carpetas</button>` })
+    $('[data-close]', dialog.layer).onclick = dialog.close
+    $('[data-ok]', dialog.layer).onclick = () => { dialog.close(); state.photoDays.clear(); renderView(); MQ.toast(win, `<span>${photos} fotos: ${verb.toLowerCase()} a ${days.length} carpetas</span><button class="btn small" type="button">Deshacer</button>`) }
+  }
+  const byId = (id) => state.files.find((file) => file.id === Number(id))
+
+  function renderDetail() {
+    const panel = $('#detail', win)
+    const file = byId(state.detail)
+    if (state.scenario === 'first' || state.view === 'settings' || !file) {
+      panel.innerHTML = '<span class="section-label">Detalle</span><div class="empty" style="padding:24px 0"><span>Elige un archivo para ver su origen, su actividad y su marca.</span></div>'
+      return
+    }
+    panel.innerHTML = `<div class="detail-head"><span class="section-label">Detalle</span><span class="detail-name">${esc(file.name)}</span><span class="row" style="flex-wrap:wrap;gap:4px">${markBadge(file)}</span></div>
+      ${previewPane(file, true)}
+      <div class="row"><button class="btn small" type="button" data-cmd-detail="preview">Vista previa grande</button><button class="btn small" type="button" data-reveal-detail>Mostrar en carpeta</button></div>
+      ${file.modifiedAfterMark ? '<div class="warn-box">Cambió después de marcarlo para eliminar: la marca quedó suspendida hasta que la revises.</div>' : ''}
+      <dl class="kv">
+        <dt>Carpeta</dt><dd class="break-all">${esc(fullFolder(file.dir))}</dd>
+        <dt>Tamaño</dt><dd>${file.size}</dd>
+        <dt>Origen</dt><dd><span class="value-line" title="${esc(file.evidence)}"><span>${file.origin} · ${esc(file.evidence.split(' · ')[0])}</span><button class="link-btn" type="button" data-origin-full>Ver enlace completo</button></span><div class="value-full" hidden>${esc(file.evidence)}<div><button class="btn small" type="button" style="margin-top:6px">Copiar</button></div></div></dd>
+        <dt>Abierto</dt><dd>${file.opened == null ? 'nunca, según Windows' : `hace ${file.opened} días`}</dd>
+        <dt>Modificado</dt><dd>hace ${file.modified} días</dd>
+        <dt>Actividad</dt><dd>${inactivity(file)}</dd>
+        <dt>Vence</dt><dd>${file.expires ? formatDate(file.expires) : '—'}</dd>
+        <dt>Marca</dt><dd>${file.folderRule ? 'heredada de la carpeta' : file.mark === 'none' ? '—' : 'puesta a mano'}</dd>
+      </dl>
+      <div class="field"><span class="label accent">Etiquetas</span><div class="chips">${file.tags.map((tag) => `<span class="chip on">#${esc(tag)}</span>`).join('')}<button type="button" class="chip" data-cmd-detail="tag">+ etiqueta</button></div></div>
+      ${file.noRecycleBin ? '<div class="warn-box">Este disco no tiene Papelera de reciclaje: eliminar aquí es definitivo.</div>' : ''}
+      <div class="field"><span class="label accent">Nota</span><textarea rows="3" id="note" placeholder="Por qué se queda o se va">${esc(file.note || '')}</textarea></div>
+      <div class="detail-actions"><button class="btn" type="button" data-detail="keep" title="Ninguna regla lo vuelve a proponer. Puedes ponerle una fecha de vencimiento.">Conservar</button><button class="btn" type="button" data-detail="deleteOn" title="Eliges un día: ese día va a la Papelera, con un aviso el día antes.">Programar eliminación</button><button class="btn danger" type="button" data-detail="delete" title="Lo manda ahora a la Papelera de Windows; se puede deshacer.">A la Papelera</button></div>`
+    $('#note', panel).oninput = (event) => { file.note = event.target.value }
+    $$('[data-detail]', panel).forEach((button) => { button.onclick = () => applyMark([file.id], button.dataset.detail) })
+    $('[data-cmd-detail="tag"]', panel).onclick = () => tagDialog([file.id])
+    $('[data-cmd-detail="preview"]', panel).onclick = () => previewDialog([file.id])
+    $('[data-reveal-detail]', panel).onclick = () => MQ.toast(win, `Se muestra ${esc(file.name)} en el Explorador`)
+    $('[data-origin-full]', panel).onclick = (event) => { const full = $('.value-full', panel); full.hidden = !full.hidden; event.target.textContent = full.hidden ? 'Ver enlace completo' : 'Ocultar' }
+  }
+
+  // ---------- vista previa: lo que Windows o Chromium pueden mostrar sin abrir la app del archivo ----------
+  const extensionOf = (name) => name.split('.').pop().toLowerCase()
+  function previewPane(file, small) {
+    const ext = extensionOf(file.name)
+    const caption = (text) => `<div class="cap">${text}</div>`
+    let body
+    if (['jpg', 'jpeg', 'png', 'heic', 'gif', 'webp'].includes(ext)) body = `<div class="thumb"></div>${caption('Imagen · se muestra entera')}`
+    else if (ext === 'pdf') body = `<div class="page"><i style="width:60%"></i><i></i><i></i><i style="width:80%"></i><i></i><i style="width:40%"></i></div><div class="cap row"><span class="grow">PDF · miniatura de Windows</span><button class="btn small" type="button">Abrir con su programa</button></div>`
+    else if (['docx', 'xlsx', 'pptx'].includes(ext)) body = `<div class="page"><i style="width:45%"></i><i></i><i style="width:90%"></i><i></i></div>${caption('Office · miniatura de Windows (la que muestra el Explorador)')}`
+    else if (['txt', 'csv', 'log', 'json'].includes(ext)) body = `<pre>fecha;cliente;total\n2024-01-03;A-102;1.250\n2024-01-03;B-221;980\n…</pre>${caption('Texto · primeras 40 líneas')}`
+    else if (['zip', 'rar', '7z'].includes(ext)) body = `<pre>📁 ventas_2024/\n   enero.csv      1,2 MB\n   febrero.csv    1,1 MB\n   … 1.204 archivos</pre>${caption('Comprimido · lista de su contenido, sin descomprimir')}`
+    else if (['exe', 'msi'].includes(ext)) body = `<div class="none"><b class="strong">Instalador</b><span>Editor: Zoom Video Communications · versión 6.2 · firmado</span></div>${caption('Ejecutable · propiedades del archivo, nunca se ejecuta')}`
+    else body = `<div class="none"><span>Sin vista previa para .${esc(ext)}</span><button class="btn small" type="button">Abrir con su programa</button></div>`
+    return `<div class="preview ${small ? 'small' : ''}">${body}</div>`
+  }
+  // revisar uno por uno: anterior/siguiente y sacar del lote; onConfirm recibe los que quedaron
+  function previewDialog(ids, onConfirm) {
+    const included = new Set(ids)
+    let index = 0
+    const dialog = MQ.dialog(win, { title: 'Vista previa', wide: true, body: '<div id="pvBody" style="display:flex;flex-direction:column;gap:10px"></div>', foot: `<button class="btn" type="button" data-prev>‹ Anterior</button><button class="btn" type="button" data-next>Siguiente ›</button><span class="grow"></span>${onConfirm ? '<button class="btn" type="button" data-close>Cancelar</button><button class="btn danger-solid" type="button" data-ok></button>' : '<button class="btn primary" type="button" data-close>Cerrar</button>'}` })
+    const paint = () => {
+      const file = byId(ids[index])
+      const inBatch = included.has(file.id)
+      $('#pvBody', dialog.layer).innerHTML = `<div class="row"><b class="strong grow ellipsis">${esc(file.name)}</b><span class="muted">${index + 1} de ${ids.length}</span></div>
+        <span class="muted" style="font-size:12px">${esc(fullFolder(file.dir))} · ${file.size} · ${inactivity(file)}</span>
+        ${previewPane(file, false)}
+        ${ids.length > 1 ? `<label class="row"><input type="checkbox" data-include ${inBatch ? 'checked' : ''}><span>${onConfirm ? 'Incluir en la eliminación' : 'Mantener en la selección'}</span></label>` : ''}`
+      const include = $('[data-include]', dialog.layer)
+      if (include) include.onchange = () => { include.checked ? included.add(file.id) : included.delete(file.id); paintFoot() }
+      $('[data-prev]', dialog.layer).disabled = index === 0
+      $('[data-next]', dialog.layer).disabled = index === ids.length - 1
+    }
+    const paintFoot = () => { const ok = $('[data-ok]', dialog.layer); if (ok) { ok.textContent = `Enviar ${included.size} a la Papelera`; ok.disabled = !included.size } }
+    $('[data-prev]', dialog.layer).onclick = () => { index--; paint() }
+    $('[data-next]', dialog.layer).onclick = () => { index++; paint() }
+    $$('[data-close]', dialog.layer).forEach((button) => { button.onclick = () => { if (!onConfirm) { state.selected = new Set([...state.selected].filter((id) => included.has(id))); renderView() } dialog.close() } })
+    const ok = $('[data-ok]', dialog.layer)
+    if (ok) ok.onclick = () => { dialog.close(); onConfirm([...included]) }
+    paint(); paintFoot()
+  }
+  function tagDialog(ids) {
+    const known = [...new Set(state.files.flatMap((file) => file.tags))].sort()
+    const dialog = MQ.dialog(win, { title: `Etiquetar ${ids.length} archivo${ids.length > 1 ? 's' : ''}`, body: `<div class="field"><span class="label accent">Nueva etiqueta</span><input id="newTag" placeholder="por ejemplo: viajes"></div><span class="label">O una existente</span><div class="chips">${known.map((tag) => `<button type="button" class="chip" data-tag="${esc(tag)}">#${esc(tag)}</button>`).join('')}</div>`, foot: '<button class="btn" type="button" data-close>Cancelar</button><button class="btn primary" type="button" data-ok>Etiquetar</button>' })
+    $$('[data-tag]', dialog.layer).forEach((chip) => { chip.onclick = () => chip.classList.toggle('on') })
+    $('[data-close]', dialog.layer).onclick = dialog.close
+    $('[data-ok]', dialog.layer).onclick = () => {
+      const chosen = $$('[data-tag].on', dialog.layer).map((chip) => chip.dataset.tag)
+      const typed = $('#newTag', dialog.layer).value.trim().toLowerCase()
+      if (typed) chosen.push(typed)
+      ids.forEach((id) => { const file = byId(id); file.tags = [...new Set([...file.tags, ...chosen])] })
+      dialog.close(); state.selected.clear(); shell()
+    }
+  }
+
+  // ---------- marcas ----------
+  function applyMark(ids, mark) {
+    if (!ids.length) return
+    if (mark === 'deleteOn' || mark === 'reviewOn') return askDate(ids, mark)
+    if (mark === 'keep') return askKeep(ids)
+    if (mark === 'delete') return confirmDelete(ids)
+    commit(ids, { mark })
+  }
+  function commit(ids, change, message) {
+    state.lastBatch = ids.map((id) => ({ ...byId(id) }))
+    ids.forEach((id) => { const file = byId(id); Object.assign(file, change); delete file.modifiedAfterMark; if (change.mark !== 'none') delete file.proposal; if (change.mark !== 'deleteOn' && change.mark !== 'reviewOn') delete file.due })
+    state.selected.clear()
+    shell()
+    const note = MQ.toast(win, `<span>${message || `${ids.length} archivo${ids.length > 1 ? 's' : ''}: ${MARKS[change.mark].label.toLowerCase()}`}</span><button class="btn small" type="button" data-undo>Deshacer</button>`)
+    $('[data-undo]', note).onclick = () => { state.lastBatch.forEach((saved) => Object.assign(byId(saved.id), saved)); note.remove(); shell() }
+  }
+  function askDate(ids, mark) {
+    const verb = mark === 'deleteOn' ? 'Eliminar' : 'Revisar'
+    const dialog = MQ.dialog(win, { title: `${verb} el…`, body: `<span>${ids.length} archivo${ids.length > 1 ? 's' : ''}. ${mark === 'deleteOn' ? 'Ese día irán a la Papelera de reciclaje; te aviso el día anterior.' : 'Ese día vuelven a «Sin revisar» y te aviso.'}</span>
+      <div class="chips">${[7, 30, 90].map((days) => `<button type="button" class="chip" data-days="${days}">en ${days} días</button>`).join('')}</div>
+      <div class="field"><span class="label accent">O una fecha</span><input type="date" id="due" value="2026-12-04"></div>`, foot: `<button class="btn" type="button" data-close>Cancelar</button><button class="btn primary" type="button" data-ok>${verb} el día elegido</button>` })
+    $$('[data-days]', dialog.layer).forEach((chip) => { chip.onclick = () => { $('#due', dialog.layer).value = new Date(TODAY.getTime() + chip.dataset.days * DAY_MS).toISOString().slice(0, 10); $$('[data-days]', dialog.layer).forEach((other) => other.classList.toggle('on', other === chip)) } })
+    $('[data-close]', dialog.layer).onclick = dialog.close
+    $('[data-ok]', dialog.layer).onclick = () => { const due = $('#due', dialog.layer).value; dialog.close(); commit(ids, { mark, due }, `${ids.length} archivo${ids.length > 1 ? 's' : ''}: ${verb.toLowerCase()} el ${formatDate(due)}`) }
+  }
+  function askKeep(ids) {
+    const dialog = MQ.dialog(win, { title: 'Conservar', body: `<span>${ids.length} archivo${ids.length > 1 ? 's' : ''} quedan fuera de las reglas de limpieza.</span>
+      <label class="row"><input type="checkbox" id="hasExpiry"><span>Tiene fecha de vencimiento</span></label>
+      <div class="field"><span class="label accent">Vence el</span><input type="date" id="expires" value="2027-01-15" disabled></div><span class="hint">Avisos 60, 30, 7 y 1 días antes. Una póliza, una garantía, un contrato o un documento de identidad.</span>`, foot: '<button class="btn" type="button" data-close>Cancelar</button><button class="btn primary" type="button" data-ok>Conservar</button>' })
+    $('#hasExpiry', dialog.layer).onchange = (event) => { $('#expires', dialog.layer).disabled = !event.target.checked }
+    $('[data-close]', dialog.layer).onclick = dialog.close
+    $('[data-ok]', dialog.layer).onclick = () => { const expires = $('#hasExpiry', dialog.layer).checked ? $('#expires', dialog.layer).value : undefined; dialog.close(); commit(ids, { mark: 'keep', expires }) }
+  }
+  function confirmDelete(ids) {
+    const names = ids.map((id) => byId(id).name)
+    const permanent = ids.filter((id) => byId(id).noRecycleBin)
+    if (permanent.length) {
+      const dialog = MQ.dialog(win, { title: 'Se borrará definitivamente', body: `<div class="warn-box">${permanent.length} archivo${permanent.length > 1 ? 's están' : ' está'} en un disco sin Papelera de reciclaje (USB E:). No se puede deshacer.</div><div class="field"><span class="label accent">Escribe ${permanent.length} para confirmar</span><input id="confirmCount" style="width:120px"></div>`, foot: '<button class="btn" type="button" data-close>Cancelar</button><button class="btn danger-solid" type="button" data-ok disabled>Borrar definitivamente</button>' })
+      const okButton = $('[data-ok]', dialog.layer)
+      $('#confirmCount', dialog.layer).oninput = (event) => { okButton.disabled = event.target.value.trim() !== String(permanent.length) }
+      $('[data-close]', dialog.layer).onclick = dialog.close
+      okButton.onclick = () => { dialog.close(); state.files = state.files.filter((file) => !ids.includes(file.id)); shell(); MQ.toast(win, `${permanent.length} borrado${permanent.length > 1 ? 's' : ''} definitivamente`) }
+      return
+    }
+    const trash = (finalIds) => { state.files = state.files.filter((file) => !finalIds.includes(file.id)); state.selected.clear(); shell(); MQ.toast(win, `<span>${finalIds.length} en la Papelera de reciclaje</span><button class="btn small" type="button" data-restore>Deshacer</button>`) }
+    const list = ids.map((id) => byId(id)).map((file, index) => `<div class="row"><span class="grow ellipsis">${esc(file.name)}</span><span class="muted">${file.size}</span><button class="btn small" type="button" data-look="${index}">Ver</button></div>`).join('')
+    const dialog = MQ.dialog(win, { title: 'Enviar a la Papelera de reciclaje', body: `<span>${names.length === 1 ? esc(names[0]) : `${names.length} archivos`} irán a la Papelera de reciclaje de Windows. Se pueden restaurar desde ahí o con «Deshacer».</span><div class="review-list">${list}</div>`, foot: `<button class="btn" type="button" data-review>Revisar uno por uno</button><span class="grow"></span><button class="btn" type="button" data-close>Cancelar</button><button class="btn danger-solid" type="button" data-ok>Enviar a la Papelera</button>` })
+    $('[data-close]', dialog.layer).onclick = dialog.close
+    $('[data-review]', dialog.layer).onclick = () => { dialog.close(); previewDialog(ids, trash) }
+    $$('[data-look]', dialog.layer).forEach((button) => { button.onclick = () => { dialog.close(); previewDialog([ids[Number(button.dataset.look)]], trash) } })
+    $('[data-ok]', dialog.layer).onclick = () => { dialog.close(); trash(ids) }
+  }
+
+  // ---------- comandos y menús ----------
+  const COMMANDS = {
+    addRoot() { const dialog = MQ.dialog(win, { title: 'Agregar carpeta', body: '<span>Aquí se abre el selector de carpetas de Windows. En la maqueta se usa Descargas.</span><div class="field"><span class="label accent">Marca de la carpeta</span><select><option>Hereda la global</option><option>Conservar todo</option><option>Eliminar lo que tenga más de 30 días</option></select></div>', foot: '<button class="btn" type="button" data-close>Cancelar</button><button class="btn primary" type="button" data-ok>Vigilar esta carpeta</button>' }); $('[data-close]', dialog.layer).onclick = dialog.close; $('[data-ok]', dialog.layer).onclick = () => { dialog.close(); setScenario('scanning') } },
+    scan() { setScenario('scanning') },
+    clearSel() { state.selected.clear(); renderView() },
+    tagSelection() { tagDialog([...state.selected]) },
+    previewSelection() { previewDialog([...state.selected]) },
+    saveSearch() { const dialog = MQ.dialog(win, { title: 'Guardar búsqueda', body: '<div class="field"><span class="label accent">Nombre</span><input id="searchName" value="Mi búsqueda"></div><span class="hint">Aparece en la columna izquierda, en Búsquedas guardadas.</span>', foot: '<button class="btn" type="button" data-close>Cancelar</button><button class="btn primary" type="button" data-ok>Guardar</button>' }); $('[data-close]', dialog.layer).onclick = dialog.close; $('[data-ok]', dialog.layer).onclick = () => { SAVED_SEARCHES.push({ name: $('#searchName', dialog.layer).value, filters: { ...state.filters } }); state.savedIndex = SAVED_SEARCHES.length - 1; dialog.close(); shell() } },
+    ruleFormOpen() { state.ruleForm = true; renderView() },
+    ruleFormClose() { state.ruleForm = false; renderView() },
+    ruleFormSave() { state.ruleForm = false; renderView(); MQ.toast(win, 'Regla «Videos de capacitación vistos» guardada') },
+    acceptAll() { applyMark(state.files.filter((file) => file.mark === 'none' && file.proposal).map((file) => file.id), 'delete') },
+    folderRule() { const dialog = MQ.dialog(win, { title: `Marca de la carpeta ${state.folder}`, body: '<span>Los archivos nuevos que caen aquí la heredan. Una marca puesta a mano en un archivo gana sobre la de la carpeta.</span><div class="field"><span class="label accent">Marca</span><select><option>Hereda la global</option><option>Conservar todo</option><option selected>Eliminar lo que tenga más de 30 días</option><option>Revisar cada 90 días</option><option>Ordenar fotos por fecha</option></select></div><span class="hint">Simulación: con esta marca se programarían 1.240 archivos (6,1 GB).</span>', foot: '<button class="btn danger" type="button" data-unwatch-dialog>Dejar de vigilar</button><span class="grow"></span><button class="btn" type="button" data-close>Cancelar</button><button class="btn primary" type="button" data-close>Guardar</button>' }); $$('[data-close]', dialog.layer).forEach((button) => { button.onclick = dialog.close }); $('[data-unwatch-dialog]', dialog.layer).onclick = () => { dialog.close(); confirmUnwatch(ROOTS.find((root) => root.name === state.folder)) } },
+    photoRule() { const dialog = MQ.dialog(win, { title: 'Ordenar fotos por fecha automáticamente', body: '<span>Cada foto nueva que llegue a <b class="strong">Descargas</b> se mueve a su carpeta por fecha. Solo mueve, nunca copia.</span><div class="field"><span class="label accent">Destino</span><input class="mono" value="C:\\Users\\…\\Pictures\\Purga\\AAAA\\AAAA-MM-DD"></div><div class="warn-box">Simulación: hoy movería 113 fotos a 4 carpetas. 4 fotos sin fecha de captura se proponen en vez de moverse.</div><span class="hint">Cada día de movimientos queda en un lote con Deshacer.</span>', foot: '<button class="btn" type="button" data-close>Cancelar</button><button class="btn primary" type="button" data-close>Activar</button>' }); $$('[data-close]', dialog.layer).forEach((button) => { button.onclick = dialog.close }) },
+    addExt() { const input = $('#newExt', win); const ext = input.value.trim().toLowerCase().replace(/^\./, ''); if (!ext) return; (EXT_GROUPS.otras ??= []).includes(ext) || EXT_GROUPS.otras.push(ext); state.excluded.add(ext); renderView() },
+    saveExt() { const dialog = MQ.dialog(win, { title: 'Aplicar filtro de extensiones', body: '<div class="warn-box">Quedan fuera 312 archivos. 4 tienen marca o nota y se conservan como «fuera del filtro»; 1 tiene un vencimiento y seguirá avisando.</div><span>Los archivos del disco no se tocan.</span>', foot: '<button class="btn" type="button" data-close>Cancelar</button><button class="btn primary" type="button" data-close>Aplicar</button>' }); $$('[data-close]', dialog.layer).forEach((button) => { button.onclick = dialog.close }) },
+    about() { const dialog = MQ.dialog(win, { title: 'Acerca de Purga', wide: true, body: aboutBody(), foot: '<button class="btn" type="button">Notas de la versión</button><button class="btn" type="button">Guía de uso</button><span class="grow"></span><button class="btn primary" type="button" data-close>Cerrar</button>' }); $('[data-close]', dialog.layer).onclick = dialog.close },
+  }
+  const MENUS = {
+    Archivo: [['Agregar carpeta…', 'Ctrl+O', () => COMMANDS.addRoot()], ['Escanear ahora', 'F5', () => COMMANDS.scan()], null, ['Exportar marcas…', '', () => MQ.toast(win, 'Marcas exportadas a purga-marcas.json')], ['Importar marcas…', '', null], null, ['Cerrar a la bandeja', 'Ctrl+W', null], ['Salir', 'Alt+F4', null]],
+    Editar: [['Buscar', 'Ctrl+F', () => $('#search', win)?.focus()], ['Seleccionar todo', 'Ctrl+A', () => { go('explore') }], null, ['Conservar…', 'Ctrl+K', () => applyMark([state.detail], 'keep')], ['Eliminar el…', 'Ctrl+D', () => applyMark([state.detail], 'deleteOn')], ['Deshacer último lote', 'Ctrl+Z', null]],
+    Ver: [['Resumen', 'Ctrl+1', () => go('summary')], ['Explorar', 'Ctrl+2', () => go('explore')], ['Propuestas', 'Ctrl+3', () => go('proposals')], ['Programados', 'Ctrl+4', () => go('scheduled')]],
+    Herramientas: [['Duplicados', '', () => go('duplicates')], ['Fotos parecidas', '', () => { state.photoTab = 'similar'; go('photos') }], ['Ordenar fotos por fecha', '', () => { state.photoTab = 'bydate'; go('photos') }], ['Vencimientos', '', () => go('expiry')], ['Reglas…', '', () => go('rules')], ['Pasada diaria ahora', '', () => MQ.toast(win, 'Pasada diaria en curso')], null, ['Configuración', 'Ctrl+,', () => go('settings')]],
+    Ayuda: [['Guía de uso', 'F1', () => showHelp('guide', true)], ['Lo que conviene saber', '', () => showHelp('know', true)], ['Notas de la versión', '', null], ['Registro', '', () => showHelp('log', true)], null, ['Acerca de Purga', '', () => COMMANDS.about()]],
+  }
+
+  // ---------- ayuda (lámina 8 y menú Ayuda) ----------
+  function aboutBody() {
+    return `<div class="about-head"><span class="logo mq-logo"></span><div><div class="about-name">Purga</div><span class="muted">0.1.0 · Indexa tus archivos, detecta lo que sobra y avisa lo que vence.</span></div></div>
+      <table class="about-table"><tbody>
+        <tr><th colspan="2">Con qué corre</th></tr><tr><td>Electron · Chromium · Node</td><td class="mono">[de process.versions]</td></tr><tr><td>Windows</td><td class="mono">[versión del sistema]</td></tr>
+        <tr><th colspan="2">De qué depende en el equipo</th></tr><tr><td>Papelera de reciclaje</td><td><span class="badge ok">disponible</span></td></tr><tr><td>Notificaciones de Windows</td><td><span class="badge ok">activadas</span></td></tr>
+        <tr><th colspan="2">Dónde guarda</th></tr><tr><td class="mono">%APPDATA%\\Purga\\purga.db</td><td><button class="btn small" type="button">Abrir carpeta</button></td></tr><tr><td class="mono">%APPDATA%\\Purga\\logs\\purga.log</td><td><button class="btn small" type="button">Abrir</button></td></tr>
+        <tr><th colspan="2">Código abierto</th></tr><tr><td colspan="2" class="muted">Lo que viaja en el instalador, con su licencia (se deriva al construir).</td></tr>
+      </tbody></table><span class="hint">© 2026 Jhovanny Linares · Licencia MIT · com.jhovanny.purga</span>`
+  }
+  const HELP = {
+    about: () => ({ title: 'Acerca de Purga', body: aboutBody() }),
+    guide: () => ({ title: 'Guía de uso', body: '<b class="strong">1. Elige qué vigilar</b><span>Archivo › Agregar carpeta. Purga la revisa por detrás; puedes usarla mientras tanto.</span><b class="strong">2. Marca lo que se queda y lo que se va</b><span>En Explorar, marca varios archivos con las casillas: Conservar, Eliminar, Eliminar el… o Revisar el…</span><b class="strong">3. Revisa las propuestas</b><span>Las reglas proponen; nada se borra sin tu decisión, y lo borrado va a la Papelera.</span><b class="strong">4. Protege lo que vence</b><span>Conservar con fecha de vencimiento te avisa antes de que venza.</span>' }),
+    know: () => ({ title: 'Lo que conviene saber', body: '<span>• Windows casi nunca registra cuándo abriste un archivo; Purga lo toma de los «Recientes» de Windows y, si no hay, cuenta desde la última modificación.</span><span>• Copiar un archivo le pone fecha de creación nueva: por eso la creación no cuenta.</span><span>• Si un archivo marcado para eliminar cambia, la marca se suspende.</span><span>• Los archivos que solo están en OneDrive no se descargan para buscar duplicados.</span>' }),
+    log: () => ({ title: 'Registro', body: '<span class="hint">%APPDATA%\\Purga\\logs\\purga.log · una línea por evento · datos de ejemplo</span><div class="value-box" style="white-space:pre;font-size:11px">{"nivel":"INFO","op":"reconcile.done","carpeta":"Descargas","archivos":19300}\n{"nivel":"WARN","op":"scan.access_denied","ruta":"C:\\\\…\\\\Privado"}\n{"nivel":"INFO","op":"batch.trashed","lote":42,"archivos":3}\n{"nivel":"ERROR","op":"hash.read_failed","archivo":9031,"error":"en uso"}</div>' }),
+  }
+  function showHelp(tab, inPrototype) {
+    const { title, body } = HELP[tab]()
+    if (inPrototype) { const dialog = MQ.dialog(win, { title, body, wide: true, foot: '<button class="btn primary" type="button" data-close>Cerrar</button>' }); $('[data-close]', dialog.layer).onclick = dialog.close; return }
+    $('#mq-help').innerHTML = `<div class="backdrop"><div class="dialog wide"><div class="dialog-head"><span class="dialog-title">${title}</span><span class="dialog-x">×</span></div><div class="dialog-body">${body}</div><div class="dialog-foot"><button class="btn primary" type="button">Cerrar</button></div></div></div>`
+  }
+
+  // ---------- láminas estáticas ----------
+  function renderStates() {
+    const sample = (patch) => ({ ...fileData()[3], note: undefined, proposal: undefined, ...patch })
+    const STATES = [
+      ['Sin revisar', 'Nadie la marcó y ninguna regla la propone.', sample({ mark: 'none' })],
+      ['Propuesta de una regla', 'Una regla la propone; no cambia nada hasta que el usuario acepte.', sample({ mark: 'none', proposal: 'Descarga temporal' })],
+      ['Conservar con vencimiento', 'El usuario la protege y le pone fecha; avisa antes de vencer.', sample({ mark: 'keep', expires: '2026-11-11', name: 'poliza_auto_2026.pdf' })],
+      ['Eliminar el {fecha}', 'Programada por el usuario: se ejecuta sola ese día.', sample({ mark: 'deleteOn', due: '2026-11-05' })],
+      ['Suspendida', 'Se marcó para eliminar y después cambió: vuelve a revisión.', sample({ mark: 'delete', modifiedAfterMark: true, name: 'captura_error_vpn.png' })],
+      ['Revisar el {fecha}', 'Ese día vuelve a «Sin revisar» y avisa.', sample({ mark: 'reviewOn', due: '2026-12-15', name: 'presupuesto_casa.xlsx', note: 'Ver si sigue sirviendo' })],
+    ]
+    $('#mq-states').innerHTML = STATES.map(([title, why, file]) => `<div class="mq-state"><b class="strong">${title}</b><p class="mq-why">${why}</p><div class="win mq-static"><div class="table">${fileRow(file)}</div></div></div>`).join('') +
+      `<div class="mq-state"><b class="strong">Disco desconectado</b><p class="mq-why">Sus archivos no se dan por perdidos: la carpeta queda en pausa.</p><div class="win mq-static"><div class="statusbar" style="border:0"><span class="dot tone-off"></span><span>Disco E: desconectado · 3.204 archivos en pausa</span></div></div></div>
+       <div class="mq-state"><b class="strong">Revisando una carpeta</b><p class="mq-why">La reconciliación corre por detrás; se puede buscar y marcar mientras tanto.</p><div class="win mq-static"><div class="statusbar" style="border:0"><span class="row" style="gap:8px">Revisando Descargas <span class="progress"><i style="width:42%"></i></span> 8.112 / 19.300</span></div></div></div>`
+  }
+  function renderMarks() {
+    $('#mq-marks').innerHTML = Object.values(MARKS).map((mark) => `<tr><td><span class="badge ${mark.badge}">${mark.label}</span></td><td>${mark.what}</td></tr>`).join('')
+  }
+
+  // ---------- escenarios y flujos ----------
+  function setScenario(scenario) {
+    state.scenario = scenario
+    if (scenario === 'sample') state.files = fileData()
+    $$('[data-scenario]').forEach((button) => button.classList.toggle('primary', button.dataset.scenario === scenario))
+    shell()
+  }
+  const FLOWS = [
+    { who: 'Primer uso', trigger: 'sin carpetas vigiladas', steps: [['Resumen vacío', 'screen'], ['Agregar carpeta'], ['selector de Windows', 'sys'], ['reconciliación por detrás', 'own'], ['Resumen con datos', 'screen']], run: () => setScenario('first') },
+    { who: 'Borrar X y dejar N', trigger: 'una carpeta con 100 archivos', steps: [['Explorar', 'screen'], ['casillas'], ['Eliminar / Conservar'], ['lote con Deshacer', 'own']], run: () => { state.folder = 'Descargas'; state.selected = new Set([3, 4, 7]); go('explore') } },
+    { who: 'Programar una eliminación', trigger: '«Eliminar el…»', steps: [['Explorar o Detalle', 'screen'], ['fecha'], ['Programados', 'screen'], ['aviso el día antes', 'sys'], ['Papelera', 'sys']], run: () => go('scheduled') },
+    { who: 'Revisar propuestas', trigger: 'reglas de limpieza', steps: [['Propuestas', 'screen'], ['A la Papelera'], ['Confirmar Papelera'], ['Deshacer', 'own']], run: () => go('proposals') },
+    { who: 'Conservar con vencimiento', trigger: 'póliza, garantía, contrato', steps: [['Detalle', 'screen'], ['Conservar + fecha'], ['Vencimientos', 'screen'], ['avisos 60·30·7·1', 'sys']], run: () => { state.detail = 2; go('expiry') } },
+    { who: 'Marca de carpeta', trigger: 'no marcar archivo por archivo', steps: [['Explorar', 'screen'], ['Cambiar marca de carpeta'], ['simulación'], ['los nuevos la heredan', 'own']], run: () => { state.folder = 'Descargas'; go('explore'); COMMANDS.folderRule() } },
+    { who: 'Elegir extensiones', trigger: 'omitir o agregar tipos', steps: [['Configuración', 'screen'], ['grupos y extensiones'], ['aviso de impacto'], ['índice al día', 'own']], run: () => go('settings') },
+    { who: 'Fotos parecidas', trigger: 'original, reenviada, ráfaga', steps: [['Fotos · Parecidas', 'screen'], ['la mejor ya elegida', 'own'], ['Conservar la mejor'], ['Papelera', 'sys']], run: () => { state.photoTab = 'similar'; go('photos') } },
+    { who: 'Ordenar fotos por fecha', trigger: 'a mano o automático', steps: [['Fotos · Por fecha', 'screen'], ['días'], ['Mover / Copiar'], ['AAAA\\AAAA-MM-DD', 'own']], run: () => { state.photoTab = 'bydate'; state.photoDays = new Set(['2026-08-02', '2026-08-03']); go('photos') } },
+    { who: 'Búsqueda combinada', trigger: 'origen + días + marca + etiqueta', steps: [['Filtros', 'screen'], ['combinar'], ['acción en lote'], ['Guardar búsqueda', 'own']], run: () => { state.filters = { text: '', origin: 'Navegador', days: 30, mark: '', tag: '' }; state.savedIndex = null; go('search') } },
+    { who: 'Disco sin Papelera', trigger: 'USB o unidad de red', steps: [['Eliminar'], ['confirmación fuerte'], ['borrado definitivo', 'sys']], run: () => { state.filters = { text: 'respaldo', origin: '', days: 0, mark: '', tag: '' }; state.detail = 13; go('search') } },
+    { who: 'Desde el Explorador', trigger: 'clic derecho sobre archivos', steps: [['Mostrar más opciones', 'sys'], ['Programar eliminación con Purga…', 'sys'], ['Eliminar el…'], ['Programados', 'screen']], run: () => go('scheduled') },
+    { who: 'Consultar ayuda', trigger: 'menú Ayuda o F1', steps: [['Guía de uso', 'screen'], ['Registro'], ['Acerca de']], run: () => { setScenario('sample'); COMMANDS.about() } },
+    { who: 'Ordenar por inactividad', trigger: 'qué sobra en una carpeta', steps: [['Explorar', 'screen'], ['clic en Actividad'], ['lo dormido arriba, en rojo'], ['casillas y Eliminar']], run: () => sortByActivity() },
+  ]
+  function sortByActivity() {
+    state.folder = 'Descargas'
+    state.sort = { key: 'activity', dir: SORT_KEYS.activity.first }
+    go('explore')
+  }
+
+  // ---------- arranque de la página ----------
+  MQ.initTheme()
+  const paintSwatches = () => { MQ.swatches($('#mq-sw-dark'), TOKENS, 'dark'); MQ.swatches($('#mq-sw-light'), TOKENS, 'light') }
+  paintSwatches()
+  MQ.onThemeChange(() => { if (state.view === 'settings') renderView() })
+  MQ.boot({ list: $('#mq-boot'), splash: $('#mq-splash'), button: $('#mq-replay'), onDone: () => { setScenario('sample'); go('summary'); $('#prototipo').scrollIntoView() } })
+  MQ.flows($('#mq-flows'), FLOWS, (flow) => { if (state.scenario !== 'sample' && flow.who !== 'Primer uso') setScenario('sample'); flow.run(); $('#prototipo').scrollIntoView() })
+  $$('[data-scenario]').forEach((button) => { button.onclick = () => setScenario(button.dataset.scenario) })
+  $('#mq-try-sort').onclick = () => { setScenario('sample'); sortByActivity(); $('#prototipo').scrollIntoView() }
+  // lámina 14: arrastrar el borde de un título cambia el ancho de esa columna; doble clic vuelve al de fábrica
+  const CC_MIN_WIDTH = { name: 160, kind: 90, origin: 80, activity: 96, size: 76 }
+  const ccTable = $('#cc-table')
+  $$('.cc-th[data-col]', ccTable).forEach((header, index) => {
+    const grip = $('.cc-grip', header)
+    const initial = header.style.width
+    const setWidth = (width) => {
+      header.style.width = width
+      $$('.cc-row', ccTable).forEach((row) => { row.children[index].style.width = width })
+    }
+    grip.addEventListener('dblclick', () => setWidth(initial))
+    grip.addEventListener('mousedown', (start) => {
+      start.preventDefault()
+      const startX = start.clientX
+      const startWidth = header.getBoundingClientRect().width
+      grip.classList.add('on')
+      const move = (event) => setWidth(`${Math.max(CC_MIN_WIDTH[header.dataset.col], startWidth + event.clientX - startX)}px`)
+      const stop = () => {
+        grip.classList.remove('on')
+        document.removeEventListener('mousemove', move)
+        document.removeEventListener('mouseup', stop)
+      }
+      document.addEventListener('mousemove', move)
+      document.addEventListener('mouseup', stop)
+    })
+  })
+  // lámina 14: ⋮ del encabezado abre y cierra la ventana de columnas; cada casilla prende o apaga su columna
+  const ccMenu = $('#cc-menu')
+  const ccHeaders = $$('.cc-th[data-col]', ccTable)
+  const showColumn = (columnId, visible) => {
+    const index = ccHeaders.findIndex((header) => header.dataset.col === columnId)
+    if (index < 0) return // la columna no está en la tabla de ejemplo: en la app se agrega
+    ccHeaders[index].classList.toggle('cc-hidden', !visible)
+    $$('.cc-row', ccTable).forEach((row) => row.children[index].classList.toggle('cc-hidden', !visible))
+  }
+  const factory = new Map($$('[data-colid]', ccMenu).map((box) => [box, box.checked]))
+  $('#cc-more').onclick = () => {
+    ccMenu.hidden = !ccMenu.hidden
+    $('#cc-more').classList.toggle('on', !ccMenu.hidden)
+    $('#cc-more').setAttribute('aria-expanded', String(!ccMenu.hidden))
+  }
+  $$('[data-colid]', ccMenu).forEach((box) => { box.onchange = () => showColumn(box.dataset.colid, box.checked) })
+  $('#cc-reset').onclick = () => factory.forEach((checked, box) => { box.checked = checked; showColumn(box.dataset.colid, checked) })
+  $('#pp-origin-toggle').onclick = () => {
+    const full = $('#pp-origin-full')
+    full.hidden = !full.hidden
+    $('#pp-origin-toggle').textContent = full.hidden ? 'Ver enlace completo' : 'Ocultar'
+  }
+  $$('[data-help-tab]').forEach((tab) => { tab.onclick = () => { $$('[data-help-tab]').forEach((other) => other.classList.toggle('on', other === tab)); showHelp(tab.dataset.helpTab, false) } })
+  renderStates()
+  renderMarks()
+  showHelp('about', false)
+  setScenario('sample')
+})()
+</script>

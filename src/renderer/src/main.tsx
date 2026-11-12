@@ -1,0 +1,10 @@
+import { createRoot } from 'react-dom/client'
+import '@fontsource/open-sans/400.css'
+import '@fontsource/open-sans/600.css'
+import '@fontsource/open-sans/700.css'
+import './familia.css'
+import './tokens.css'
+import './styles.css'
+import { App } from './App'
+
+createRoot(document.getElementById('root')!).render(<App />)
