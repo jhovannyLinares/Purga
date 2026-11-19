@@ -1,0 +1,59 @@
+/* Colores de Purga según el contrato de la familia (maqueta-app, «Diseño de la familia»).
+   --brand y --accent salen del logo (azul del escudo #184890 / #1860a8, cian #48c8e8); los neutros llevan su sesgo
+   azul; --ok, --warn y --err son semánticos. Noche por defecto, día con data-theme='light'. */
+:root {
+  --bg: #161c23;
+  --panel: #1e262f;
+  --bar: #222b35;
+  --toolbar: #29333e;
+  --field: #131920;
+  --line: #0e1318;
+  --soft-line: rgba(255, 255, 255, 0.09);
+  --text: #c9d4de;
+  --text-strong: #ffffff;
+  --muted: #94a4b4;
+  --brand: #5aa8ea;
+  --accent: #1f74bd;
+  --accent-soft: rgba(72, 200, 232, 0.16);
+  --accent-text: #8ccdf2;
+  --on-accent: #ffffff;
+  --link: #48c8e8;
+  --ok: #5cb85c;
+  --ok-text: #8fd68f;
+  --warn: #e0a040;
+  --warn-text: #f0c070;
+  --err: #d9534f;
+  --err-text: #ff8a86;
+  --toast: #1d3550;
+  --backdrop: rgba(8, 12, 16, 0.72);
+  --shadow: rgba(0, 0, 0, 0.5);
+  color-scheme: dark;
+}
+:root[data-theme='light'] {
+  --bg: #f3f6f9;
+  --panel: #ffffff;
+  --bar: #e8edf2;
+  --toolbar: #dfe6ed;
+  --field: #ffffff;
+  --line: #cfd8e1;
+  --soft-line: rgba(0, 0, 0, 0.14);
+  --text: #34404d;
+  --text-strong: #121a24;
+  --muted: #5b6876;
+  --brand: #184890;
+  --accent: #1860a8;
+  --accent-soft: rgba(24, 96, 168, 0.12);
+  --accent-text: #174f8f;
+  --on-accent: #ffffff;
+  --link: #0a6f96;
+  --ok: #2e8b3a;
+  --ok-text: #23702e;
+  --warn: #a86b00;
+  --warn-text: #8a5800;
+  --err: #c0322e;
+  --err-text: #b02a26;
+  --toast: #dfeaf7;
+  --backdrop: rgba(20, 30, 40, 0.4);
+  --shadow: rgba(0, 0, 0, 0.18);
+  color-scheme: light;
+}
